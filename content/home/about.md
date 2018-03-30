@@ -37,7 +37,7 @@ weight = 5
 
 # About me
 
-I'm a Python developer with wide experience in T.I projects and also a computer security enthusiast :-). I founded [Initios](https://www.initios.com/). Nowadays I develop enterprise software in Python with agile methodologies doing the consulting and business process analysis. Previously I co-founded [Parkapp](https://www.parkapp.es/).
+I'm a Python developer with wide experience in T.I projects and also a computer security enthusiast :-). I founded [Initios](https://www.initios.com/). Nowadays I develop enterprise software in Python with agile methodologies doing the consulting and business process analysis. I usually work as team facilitator. Previously I co-founded [Parkapp](https://www.parkapp.es/).
 
 [Agile manifesto](http://agilemanifesto.org/) fan:
 
