@@ -13,6 +13,16 @@
     
     
     <item>
+      <title>This summer master the mosquittos</title>
+      <link>http://alexhermida.eu/talk/20170720-python-mqtt-broker/</link>
+      <pubDate>Fri, 13 Apr 2018 00:00:00 +0200</pubDate>
+      
+      <guid>http://alexhermida.eu/talk/20170720-python-mqtt-broker/</guid>
+      <description>Lightning talk about MQTT broker and Python Client.
+  </description>
+    </item>
+    
+    <item>
       <title>Python special methods for muggles</title>
       <link>http://alexhermida.eu/talk/20160317-python-special-methods/</link>
       <pubDate>Wed, 28 Mar 2018 00:00:00 +0200</pubDate>
