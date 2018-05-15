@@ -5,7 +5,16 @@
     
     <url>
     
-      <loc>http://alexhermida.eu/talk/20170720-python-mqtt-broker/</loc>
+      <loc>https://alexhermida.eu/post/</loc>
+      <lastmod>2018-04-15T00:00:00+02:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>https://alexhermida.eu/talk/20170720-python-mqtt-broker/</loc>
       <lastmod>2018-04-13T00:00:00+02:00</lastmod>
     </url>
     
@@ -14,7 +23,7 @@
     
     <url>
     
-      <loc>http://alexhermida.eu/talk/20160317-python-special-methods/</loc>
+      <loc>https://alexhermida.eu/talk/20160317-python-special-methods/</loc>
       <lastmod>2018-03-28T00:00:00+02:00</lastmod>
     </url>
     
@@ -23,7 +32,7 @@
     
     <url>
     
-      <loc>http://alexhermida.eu/project/initios/</loc>
+      <loc>https://alexhermida.eu/project/initios/</loc>
       <lastmod>2018-03-27T00:00:00+00:00</lastmod>
     </url>
     
@@ -32,7 +41,7 @@
     
     <url>
     
-      <loc>http://alexhermida.eu/project/parkapp/</loc>
+      <loc>https://alexhermida.eu/project/parkapp/</loc>
       <lastmod>2018-03-27T00:00:00+00:00</lastmod>
     </url>
     
@@ -41,7 +50,7 @@
     
     <url>
     
-      <loc>http://alexhermida.eu/talk/</loc>
+      <loc>https://alexhermida.eu/talk/</loc>
       <lastmod>2018-03-27T00:00:00+00:00</lastmod>
     </url>
     
@@ -50,26 +59,7 @@
     
     <url>
     
-      <loc>http://alexhermida.eu/tags/android/</loc>
-      <lastmod>2018-03-27T00:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>http://alexhermida.eu/categories/</loc>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>http://alexhermida.eu/tags/co-founder/</loc>
+      <loc>https://alexhermida.eu/tags/android/</loc>
       <lastmod>2018-03-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -79,7 +69,16 @@
     
     <url>
     
-      <loc>http://alexhermida.eu/tags/development/</loc>
+      <loc>https://alexhermida.eu/categories/</loc>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>https://alexhermida.eu/tags/co-founder/</loc>
       <lastmod>2018-03-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -89,7 +88,17 @@
     
     <url>
     
-      <loc>http://alexhermida.eu/tags/introduction/</loc>
+      <loc>https://alexhermida.eu/tags/development/</loc>
+      <lastmod>2018-03-27T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>https://alexhermida.eu/tags/introduction/</loc>
       <lastmod>2018-04-13T00:00:00+02:00</lastmod>
       <priority>0</priority>
     </url>
@@ -99,7 +108,7 @@
     
     <url>
     
-      <loc>http://alexhermida.eu/tags/ios/</loc>
+      <loc>https://alexhermida.eu/tags/ios/</loc>
       <lastmod>2018-03-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -109,7 +118,7 @@
     
     <url>
     
-      <loc>http://alexhermida.eu/tags/magic-methods/</loc>
+      <loc>https://alexhermida.eu/tags/magic-methods/</loc>
       <lastmod>2018-03-28T00:00:00+02:00</lastmod>
       <priority>0</priority>
     </url>
@@ -119,7 +128,7 @@
     
     <url>
     
-      <loc>http://alexhermida.eu/tags/mosquitto/</loc>
+      <loc>https://alexhermida.eu/tags/mosquitto/</loc>
       <lastmod>2018-04-13T00:00:00+02:00</lastmod>
       <priority>0</priority>
     </url>
@@ -129,7 +138,7 @@
     
     <url>
     
-      <loc>http://alexhermida.eu/tags/mqtt/</loc>
+      <loc>https://alexhermida.eu/tags/mqtt/</loc>
       <lastmod>2018-04-13T00:00:00+02:00</lastmod>
       <priority>0</priority>
     </url>
@@ -139,7 +148,7 @@
     
     <url>
     
-      <loc>http://alexhermida.eu/</loc>
+      <loc>https://alexhermida.eu/</loc>
       <lastmod>2018-03-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -149,7 +158,7 @@
     
     <url>
     
-      <loc>http://alexhermida.eu/tags/php/</loc>
+      <loc>https://alexhermida.eu/tags/php/</loc>
       <lastmod>2018-03-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -159,7 +168,7 @@
     
     <url>
     
-      <loc>http://alexhermida.eu/project/</loc>
+      <loc>https://alexhermida.eu/project/</loc>
       <lastmod>2018-03-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -169,7 +178,7 @@
     
     <url>
     
-      <loc>http://alexhermida.eu/publication_types/</loc>
+      <loc>https://alexhermida.eu/publication_types/</loc>
       <priority>0</priority>
     </url>
     
@@ -178,7 +187,7 @@
     
     <url>
     
-      <loc>http://alexhermida.eu/tags/python/</loc>
+      <loc>https://alexhermida.eu/tags/python/</loc>
       <lastmod>2018-04-13T00:00:00+02:00</lastmod>
       <priority>0</priority>
     </url>
@@ -188,7 +197,7 @@
     
     <url>
     
-      <loc>http://alexhermida.eu/tags/startup/</loc>
+      <loc>https://alexhermida.eu/tags/startup/</loc>
       <lastmod>2018-03-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -198,7 +207,7 @@
     
     <url>
     
-      <loc>http://alexhermida.eu/tags/</loc>
+      <loc>https://alexhermida.eu/tags/</loc>
       <lastmod>2018-03-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -208,7 +217,7 @@
     
     <url>
     
-      <loc>http://alexhermida.eu/tags/vigo/</loc>
+      <loc>https://alexhermida.eu/tags/vigo/</loc>
       <lastmod>2018-03-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
