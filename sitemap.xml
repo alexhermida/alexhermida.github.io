@@ -14,6 +14,15 @@
     
     <url>
     
+      <loc>https://alexhermida.eu/talk/20170221-artesanos-del-futuro/</loc>
+      <lastmod>2018-04-13T00:00:00+02:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
       <loc>https://alexhermida.eu/talk/20170720-python-mqtt-broker/</loc>
       <lastmod>2018-04-13T00:00:00+02:00</lastmod>
     </url>
@@ -98,6 +107,26 @@
     
     <url>
     
+      <loc>https://alexhermida.eu/tags/emprender/</loc>
+      <lastmod>2018-04-13T00:00:00+02:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>https://alexhermida.eu/tags/gdg/</loc>
+      <lastmod>2018-04-13T00:00:00+02:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
       <loc>https://alexhermida.eu/tags/introduction/</loc>
       <lastmod>2018-04-13T00:00:00+02:00</lastmod>
       <priority>0</priority>
@@ -158,6 +187,16 @@
     
     <url>
     
+      <loc>https://alexhermida.eu/tags/passion/</loc>
+      <lastmod>2018-04-13T00:00:00+02:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
       <loc>https://alexhermida.eu/tags/php/</loc>
       <lastmod>2018-03-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
@@ -199,6 +238,16 @@
     
       <loc>https://alexhermida.eu/tags/startup/</loc>
       <lastmod>2018-03-27T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>https://alexhermida.eu/tags/startups/</loc>
+      <lastmod>2018-04-13T00:00:00+02:00</lastmod>
       <priority>0</priority>
     </url>
     

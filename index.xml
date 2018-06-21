@@ -11,6 +11,23 @@
     <atom:link href="/" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Artesanos del futuro</title>
+      <link>https://alexhermida.eu/talk/20170221-artesanos-del-futuro/</link>
+      <pubDate>Fri, 13 Apr 2018 00:00:00 +0200</pubDate>
+      
+      <guid>https://alexhermida.eu/talk/20170221-artesanos-del-futuro/</guid>
+      <description>&lt;p&gt;Charla realizada en el &lt;a href=&#34;https://www.meetup.com/es-ES/GDGVigo/events/237396475/&#34; target=&#34;_blank&#34;&gt;High School Developers Parade Vigo 2017&lt;/a&gt; evento organizado por
+el GDGVigo &lt;a href=&#34;https://www.meetup.com/es-ES/GDGVigo/&#34; target=&#34;_blank&#34;&gt;GDGVigo&lt;/a&gt;.&lt;/p&gt;
+
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;//www.youtube.com/embed/-O7ZdnDQXUQ&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%;&#34; allowfullscreen frameborder=&#34;0&#34; title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+ &lt;/div&gt;
+
+</description>
+    </item>
+    
+    <item>
       <title>This summer master the mosquittos</title>
       <link>https://alexhermida.eu/talk/20170720-python-mqtt-broker/</link>
       <pubDate>Fri, 13 Apr 2018 00:00:00 +0200</pubDate>
