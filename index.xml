@@ -11,6 +11,17 @@
     <atom:link href="/" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Python tools</title>
+      <link>https://alexhermida.eu/talk/20181108-python-tools/</link>
+      <pubDate>Tue, 13 Nov 2018 00:00:00 +0100</pubDate>
+      
+      <guid>https://alexhermida.eu/talk/20181108-python-tools/</guid>
+      <description>&lt;p&gt;Small talk about useful tools written in Python at
+&lt;a href=&#34;https://meetup.com/es-ES/VigoJUG/events/255662689/&#34; target=&#34;_blank&#34;&gt;VigoJUG&lt;/a&gt; meetup in November 8, 2018.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Artesanos del futuro</title>
       <link>https://alexhermida.eu/talk/20170221-artesanos-del-futuro/</link>
       <pubDate>Fri, 13 Apr 2018 00:00:00 +0200</pubDate>
@@ -20,9 +31,9 @@
 el GDGVigo &lt;a href=&#34;https://www.meetup.com/es-ES/GDGVigo/&#34; target=&#34;_blank&#34;&gt;GDGVigo&lt;/a&gt;.&lt;/p&gt;
 
 
-&lt;div style=&#34;position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;&#34;&gt;
-  &lt;iframe src=&#34;//www.youtube.com/embed/-O7ZdnDQXUQ&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%;&#34; allowfullscreen frameborder=&#34;0&#34; title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
- &lt;/div&gt;
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;//www.youtube.com/embed/-O7ZdnDQXUQ&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
 
 </description>
     </item>
@@ -36,9 +47,9 @@ el GDGVigo &lt;a href=&#34;https://www.meetup.com/es-ES/GDGVigo/&#34; target=&#3
       <description>&lt;p&gt;Lightning talk about &lt;a href=&#34;http://mosquitto.org&#34; target=&#34;_blank&#34;&gt;MQTT broker&lt;/a&gt; and &lt;a href=&#34;https://github.com/eclipse/paho.mqtt.python&#34; target=&#34;_blank&#34;&gt;Python Client&lt;/a&gt;.&lt;/p&gt;
 
 
-&lt;div style=&#34;position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;&#34;&gt;
-  &lt;iframe src=&#34;//www.youtube.com/embed/Y-W9t8KWNz4&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%;&#34; allowfullscreen frameborder=&#34;0&#34; title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
- &lt;/div&gt;
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;//www.youtube.com/embed/Y-W9t8KWNz4&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
 
 </description>
     </item>
@@ -52,9 +63,9 @@ el GDGVigo &lt;a href=&#34;https://www.meetup.com/es-ES/GDGVigo/&#34; target=&#3
       <description>&lt;p&gt;Presentation about Python special methods for Python Vigo.&lt;/p&gt;
 
 
-&lt;div style=&#34;position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;&#34;&gt;
-  &lt;iframe src=&#34;//www.youtube.com/embed/IY_6vY-M60Y&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%;&#34; allowfullscreen frameborder=&#34;0&#34; title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
- &lt;/div&gt;
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;//www.youtube.com/embed/IY_6vY-M60Y&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
 
 </description>
     </item>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Recent &amp; Upcoming Talks on My blog, my thoughts.</title>
-    <link>https://alexhermida.eu/talk/</link>
-    <description>Recent content in Recent &amp; Upcoming Talks on My blog, my thoughts.</description>
+    <title>Python on My blog, my thoughts.</title>
+    <link>https://alexhermida.eu/tags/python/</link>
+    <description>Recent content in Python on My blog, my thoughts.</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2018</copyright>
-    <lastBuildDate>Tue, 27 Mar 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 13 Nov 2018 00:00:00 +0100</lastBuildDate>
     
-	<atom:link href="https://alexhermida.eu/talk/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://alexhermida.eu/tags/python/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -19,16 +19,6 @@
       
       <guid>https://alexhermida.eu/talk/20181108-python-tools/</guid>
       <description>Small talk about useful tools written in Python at VigoJUG meetup in November 8, 2018.</description>
-    </item>
-    
-    <item>
-      <title>Artesanos del futuro</title>
-      <link>https://alexhermida.eu/talk/20170221-artesanos-del-futuro/</link>
-      <pubDate>Fri, 13 Apr 2018 00:00:00 +0200</pubDate>
-      
-      <guid>https://alexhermida.eu/talk/20170221-artesanos-del-futuro/</guid>
-      <description>Charla realizada en el High School Developers Parade Vigo 2017 evento organizado por el GDGVigo GDGVigo.
-  </description>
     </item>
     
     <item>
@@ -49,6 +39,24 @@
       <guid>https://alexhermida.eu/talk/20160317-python-special-methods/</guid>
       <description>Presentation about Python special methods for Python Vigo.
   </description>
+    </item>
+    
+    <item>
+      <title>Initios Desarrollos</title>
+      <link>https://alexhermida.eu/project/initios/</link>
+      <pubDate>Tue, 27 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://alexhermida.eu/project/initios/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Parkapp</title>
+      <link>https://alexhermida.eu/project/parkapp/</link>
+      <pubDate>Tue, 27 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://alexhermida.eu/project/parkapp/</guid>
+      <description></description>
     </item>
     
   </channel>

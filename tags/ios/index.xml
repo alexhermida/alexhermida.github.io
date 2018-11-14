@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ios on My blog, my thoughts.</title>
+    <link>https://alexhermida.eu/tags/ios/</link>
+    <description>Recent content in Ios on My blog, my thoughts.</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2018</copyright>
+    <lastBuildDate>Tue, 27 Mar 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://alexhermida.eu/tags/ios/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Parkapp</title>
+      <link>https://alexhermida.eu/project/parkapp/</link>
+      <pubDate>Tue, 27 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://alexhermida.eu/project/parkapp/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

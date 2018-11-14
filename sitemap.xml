@@ -5,6 +5,15 @@
     
     <url>
     
+      <loc>https://alexhermida.eu/talk/20181108-python-tools/</loc>
+      <lastmod>2018-11-13T00:00:00+01:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
       <loc>https://alexhermida.eu/post/</loc>
       <lastmod>2018-04-15T00:00:00+02:00</lastmod>
     </url>
@@ -128,7 +137,7 @@
     <url>
     
       <loc>https://alexhermida.eu/tags/introduction/</loc>
-      <lastmod>2018-04-13T00:00:00+02:00</lastmod>
+      <lastmod>2018-11-13T00:00:00+01:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -227,7 +236,7 @@
     <url>
     
       <loc>https://alexhermida.eu/tags/python/</loc>
-      <lastmod>2018-04-13T00:00:00+02:00</lastmod>
+      <lastmod>2018-11-13T00:00:00+01:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -258,6 +267,16 @@
     
       <loc>https://alexhermida.eu/tags/</loc>
       <lastmod>2018-03-27T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>https://alexhermida.eu/tags/tools/</loc>
+      <lastmod>2018-11-13T00:00:00+01:00</lastmod>
       <priority>0</priority>
     </url>
     
