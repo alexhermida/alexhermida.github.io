@@ -20,7 +20,7 @@ projects = []
 
 # Links (optional).
 url_pdf = ""
-url_slides = "https://github.com/alexhermida/special-methods-for-muggles"
+url_slides = "https://github.com/alexhermida/talks/tree/master/special-methods-for-muggles"
 url_video = "https://www.youtube.com/watch?v=IY_6vY-M60Y"
 url_code = ""
 
