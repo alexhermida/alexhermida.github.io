@@ -29,18 +29,18 @@ weight = 5
   year = 2013
 
 [[education.courses]]
-  course = "Bachelor's degree, Business Managament"
+  course = "Bachelor's degree, Business Management"
   institution = "University of Vigo"
   year = 2008
- 
+
 +++
 
 # About me
 
-I'm a Python developer with wide experience in T.I projects and also a computer security enthusiast :-). I founded [Initios](https://www.initios.com/). Nowadays I develop enterprise software in Python with agile methodologies doing the consulting and business process analysis. I usually work as team facilitator. Previously I co-founded [Parkapp](https://www.parkapp.es/).
+I'm a Python developer with wide experience in I.T projects and also a computer security enthusiast :-). I founded [Initios](https://www.initios.com/). Nowadays I develop enterprise software in Python with agile methodologies doing the consulting and business process analysis. I usually work as team facilitator. Previously I co-founded [Parkapp](https://www.parkapp.com/).
 
 [Agile manifesto](http://agilemanifesto.org/) fan:
 
 >"Individuals and interactions over processes and tools"
 
-I love to learn and improve my skills every day. I collaborate in local development groups inside [VigoTech](http://vigotech.org/) and I'm one of the organizers of [Python Vigo](https://www.python-vigo.es/) and [PyDay Galicia](https://pyday2017.python-vigo.es/).
+I love learning and improving my skills every day. I collaborate on local development groups inside [VigoTech](http://vigotech.org/) and I'm one of the organizers of [Python Vigo](https://www.python-vigo.es/) and [PyDay Galicia](https://pyday2017.python-vigo.es/).
