@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Mosquitto on My blog, my thoughts.</title>
-    <link>https://alexhermida.eu/tags/mosquitto/</link>
+    <link>https://alexhermida.dev/tags/mosquitto/</link>
     <description>Recent content in Mosquitto on My blog, my thoughts.</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2018</copyright>
     <lastBuildDate>Fri, 13 Apr 2018 00:00:00 +0200</lastBuildDate>
     
-	<atom:link href="https://alexhermida.eu/tags/mosquitto/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://alexhermida.dev/tags/mosquitto/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>This summer master the mosquittos</title>
-      <link>https://alexhermida.eu/talk/20170720-python-mqtt-broker/</link>
+      <link>https://alexhermida.dev/talk/20170720-python-mqtt-broker/</link>
       <pubDate>Fri, 13 Apr 2018 00:00:00 +0200</pubDate>
       
-      <guid>https://alexhermida.eu/talk/20170720-python-mqtt-broker/</guid>
+      <guid>https://alexhermida.dev/talk/20170720-python-mqtt-broker/</guid>
       <description>Lightning talk about MQTT broker and Python Client.
   </description>
     </item>

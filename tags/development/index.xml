@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Development on My blog, my thoughts.</title>
-    <link>https://alexhermida.eu/tags/development/</link>
+    <link>https://alexhermida.dev/tags/development/</link>
     <description>Recent content in Development on My blog, my thoughts.</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2018</copyright>
     <lastBuildDate>Tue, 27 Mar 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://alexhermida.eu/tags/development/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://alexhermida.dev/tags/development/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Initios Desarrollos</title>
-      <link>https://alexhermida.eu/project/initios/</link>
+      <link>https://alexhermida.dev/project/initios/</link>
       <pubDate>Tue, 27 Mar 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://alexhermida.eu/project/initios/</guid>
+      <guid>https://alexhermida.dev/project/initios/</guid>
       <description></description>
     </item>
     
