@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Homes on My blog, my thoughts.</title>
-    <link>https://alexhermida.eu/home/</link>
+    <link>https://alexhermida.dev/home/</link>
     <description>Recent content in Homes on My blog, my thoughts.</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2018</copyright>
     <lastBuildDate>Tue, 27 Mar 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://alexhermida.eu/home/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://alexhermida.dev/home/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title></title>
-      <link>https://alexhermida.eu/home/about/</link>
+      <link>https://alexhermida.dev/home/about/</link>
       <pubDate>Tue, 27 Mar 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://alexhermida.eu/home/about/</guid>
+      <guid>https://alexhermida.dev/home/about/</guid>
       <description>About me I&amp;rsquo;m a Python developer with wide experience in I.T projects and also a computer security enthusiast :-). I founded Initios. Nowadays I develop enterprise software in Python with agile methodologies doing the consulting and business process analysis. I usually work as team facilitator. Previously I co-founded Parkapp.
 Agile manifesto fan:
  &amp;ldquo;Individuals and interactions over processes and tools&amp;rdquo;
@@ -26,64 +26,64 @@ Agile manifesto fan:
     
     <item>
       <title>Selected Publications</title>
-      <link>https://alexhermida.eu/home/publications_selected/</link>
+      <link>https://alexhermida.dev/home/publications_selected/</link>
       <pubDate>Wed, 20 Apr 2016 00:00:00 +0200</pubDate>
       
-      <guid>https://alexhermida.eu/home/publications_selected/</guid>
+      <guid>https://alexhermida.dev/home/publications_selected/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Recent Publications</title>
-      <link>https://alexhermida.eu/home/publications/</link>
+      <link>https://alexhermida.dev/home/publications/</link>
       <pubDate>Wed, 20 Apr 2016 00:00:00 +0200</pubDate>
       
-      <guid>https://alexhermida.eu/home/publications/</guid>
+      <guid>https://alexhermida.dev/home/publications/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Recent Posts</title>
-      <link>https://alexhermida.eu/home/posts/</link>
+      <link>https://alexhermida.dev/home/posts/</link>
       <pubDate>Tue, 27 Mar 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://alexhermida.eu/home/posts/</guid>
+      <guid>https://alexhermida.dev/home/posts/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Recent Talks</title>
-      <link>https://alexhermida.eu/home/talks/</link>
+      <link>https://alexhermida.dev/home/talks/</link>
       <pubDate>Wed, 20 Apr 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://alexhermida.eu/home/talks/</guid>
+      <guid>https://alexhermida.dev/home/talks/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Projects</title>
-      <link>https://alexhermida.eu/home/projects/</link>
+      <link>https://alexhermida.dev/home/projects/</link>
       <pubDate>Tue, 27 Mar 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://alexhermida.eu/home/projects/</guid>
+      <guid>https://alexhermida.dev/home/projects/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Tags</title>
-      <link>https://alexhermida.eu/home/tags/</link>
+      <link>https://alexhermida.dev/home/tags/</link>
       <pubDate>Tue, 27 Mar 2018 00:00:00 +0200</pubDate>
       
-      <guid>https://alexhermida.eu/home/tags/</guid>
+      <guid>https://alexhermida.dev/home/tags/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Contact</title>
-      <link>https://alexhermida.eu/home/contact/</link>
+      <link>https://alexhermida.dev/home/contact/</link>
       <pubDate>Wed, 20 Apr 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://alexhermida.eu/home/contact/</guid>
+      <guid>https://alexhermida.dev/home/contact/</guid>
       <description></description>
     </item>
     

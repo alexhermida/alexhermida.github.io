@@ -2,166 +2,166 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on My blog, my thoughts.</title>
-    <link>https://alexhermida.eu/tags/</link>
+    <link>https://alexhermida.dev/tags/</link>
     <description>Recent content in Tags on My blog, my thoughts.</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2018</copyright>
     <lastBuildDate>Tue, 27 Mar 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://alexhermida.eu/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://alexhermida.dev/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Android</title>
-      <link>https://alexhermida.eu/tags/android/</link>
+      <link>https://alexhermida.dev/tags/android/</link>
       <pubDate>Tue, 27 Mar 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://alexhermida.eu/tags/android/</guid>
+      <guid>https://alexhermida.dev/tags/android/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Co-founder</title>
-      <link>https://alexhermida.eu/tags/co-founder/</link>
+      <link>https://alexhermida.dev/tags/co-founder/</link>
       <pubDate>Tue, 27 Mar 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://alexhermida.eu/tags/co-founder/</guid>
+      <guid>https://alexhermida.dev/tags/co-founder/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Development</title>
-      <link>https://alexhermida.eu/tags/development/</link>
+      <link>https://alexhermida.dev/tags/development/</link>
       <pubDate>Tue, 27 Mar 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://alexhermida.eu/tags/development/</guid>
+      <guid>https://alexhermida.dev/tags/development/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Emprender</title>
-      <link>https://alexhermida.eu/tags/emprender/</link>
+      <link>https://alexhermida.dev/tags/emprender/</link>
       <pubDate>Fri, 13 Apr 2018 00:00:00 +0200</pubDate>
       
-      <guid>https://alexhermida.eu/tags/emprender/</guid>
+      <guid>https://alexhermida.dev/tags/emprender/</guid>
       <description></description>
     </item>
     
     <item>
       <title>GDG</title>
-      <link>https://alexhermida.eu/tags/gdg/</link>
+      <link>https://alexhermida.dev/tags/gdg/</link>
       <pubDate>Fri, 13 Apr 2018 00:00:00 +0200</pubDate>
       
-      <guid>https://alexhermida.eu/tags/gdg/</guid>
+      <guid>https://alexhermida.dev/tags/gdg/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Introduction</title>
-      <link>https://alexhermida.eu/tags/introduction/</link>
+      <link>https://alexhermida.dev/tags/introduction/</link>
       <pubDate>Tue, 13 Nov 2018 00:00:00 +0100</pubDate>
       
-      <guid>https://alexhermida.eu/tags/introduction/</guid>
+      <guid>https://alexhermida.dev/tags/introduction/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Ios</title>
-      <link>https://alexhermida.eu/tags/ios/</link>
+      <link>https://alexhermida.dev/tags/ios/</link>
       <pubDate>Tue, 27 Mar 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://alexhermida.eu/tags/ios/</guid>
+      <guid>https://alexhermida.dev/tags/ios/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Magic methods</title>
-      <link>https://alexhermida.eu/tags/magic-methods/</link>
+      <link>https://alexhermida.dev/tags/magic-methods/</link>
       <pubDate>Wed, 28 Mar 2018 00:00:00 +0200</pubDate>
       
-      <guid>https://alexhermida.eu/tags/magic-methods/</guid>
+      <guid>https://alexhermida.dev/tags/magic-methods/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Mosquitto</title>
-      <link>https://alexhermida.eu/tags/mosquitto/</link>
+      <link>https://alexhermida.dev/tags/mosquitto/</link>
       <pubDate>Fri, 13 Apr 2018 00:00:00 +0200</pubDate>
       
-      <guid>https://alexhermida.eu/tags/mosquitto/</guid>
+      <guid>https://alexhermida.dev/tags/mosquitto/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Mqtt</title>
-      <link>https://alexhermida.eu/tags/mqtt/</link>
+      <link>https://alexhermida.dev/tags/mqtt/</link>
       <pubDate>Fri, 13 Apr 2018 00:00:00 +0200</pubDate>
       
-      <guid>https://alexhermida.eu/tags/mqtt/</guid>
+      <guid>https://alexhermida.dev/tags/mqtt/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Passion</title>
-      <link>https://alexhermida.eu/tags/passion/</link>
+      <link>https://alexhermida.dev/tags/passion/</link>
       <pubDate>Fri, 13 Apr 2018 00:00:00 +0200</pubDate>
       
-      <guid>https://alexhermida.eu/tags/passion/</guid>
+      <guid>https://alexhermida.dev/tags/passion/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Php</title>
-      <link>https://alexhermida.eu/tags/php/</link>
+      <link>https://alexhermida.dev/tags/php/</link>
       <pubDate>Tue, 27 Mar 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://alexhermida.eu/tags/php/</guid>
+      <guid>https://alexhermida.dev/tags/php/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Python</title>
-      <link>https://alexhermida.eu/tags/python/</link>
+      <link>https://alexhermida.dev/tags/python/</link>
       <pubDate>Tue, 13 Nov 2018 00:00:00 +0100</pubDate>
       
-      <guid>https://alexhermida.eu/tags/python/</guid>
+      <guid>https://alexhermida.dev/tags/python/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Startup</title>
-      <link>https://alexhermida.eu/tags/startup/</link>
+      <link>https://alexhermida.dev/tags/startup/</link>
       <pubDate>Tue, 27 Mar 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://alexhermida.eu/tags/startup/</guid>
+      <guid>https://alexhermida.dev/tags/startup/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Startups</title>
-      <link>https://alexhermida.eu/tags/startups/</link>
+      <link>https://alexhermida.dev/tags/startups/</link>
       <pubDate>Fri, 13 Apr 2018 00:00:00 +0200</pubDate>
       
-      <guid>https://alexhermida.eu/tags/startups/</guid>
+      <guid>https://alexhermida.dev/tags/startups/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Tools</title>
-      <link>https://alexhermida.eu/tags/tools/</link>
+      <link>https://alexhermida.dev/tags/tools/</link>
       <pubDate>Tue, 13 Nov 2018 00:00:00 +0100</pubDate>
       
-      <guid>https://alexhermida.eu/tags/tools/</guid>
+      <guid>https://alexhermida.dev/tags/tools/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Vigo</title>
-      <link>https://alexhermida.eu/tags/vigo/</link>
+      <link>https://alexhermida.dev/tags/vigo/</link>
       <pubDate>Tue, 27 Mar 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://alexhermida.eu/tags/vigo/</guid>
+      <guid>https://alexhermida.dev/tags/vigo/</guid>
       <description></description>
     </item>
     
