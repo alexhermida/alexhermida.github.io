@@ -3,7 +3,7 @@
 
 # The URL of your website.
 # End your URL with a `/` trailing slash, e.g. `https://example.com/`.
-baseurl = "https://alexhermida.eu/"
+baseurl = "https://alexhermida.dev/"
 
 # Title of your site
 title = "My blog, my thoughts."
@@ -51,7 +51,7 @@ defaultContentLanguageInSubdir = false
 
   # Your details.
   name = "Alex Hermida"
-  role = "Software Developer Manager"
+  role = "Software Engineer"
 
   # Organizations/Affiliations.
   #   Separate multiple entries with a comma, using the form: `[ {name="Org1", url=""}, {name="Org2", url=""} ]`.
@@ -60,7 +60,7 @@ defaultContentLanguageInSubdir = false
 
   gravatar = true  # Get your avatar from Gravatar.com? (true/false)
   avatar = ""  # Specify an avatar image (in `static/img/` folder) or delete value to disable avatar.
-  email = "alexhermida@gmail.com"
+  email = "alex@alexhermida.dev"
   # address = "Building 1 Room 1, Stanford University, California, 90210, USA"
   # office_hours = "Monday 10:00 to 13:00 or email for appointment"
   phone = ""
@@ -219,7 +219,7 @@ defaultContentLanguageInSubdir = false
   # [[params.social]]
   #   icon = "envelope"
   #   icon_pack = "fa"
-  #   link = "mailto:hi@alexhermida.eu"
+  #   link = "mailto:alex@alexhermida.dev"
 
   [[params.social]]
     icon = "twitter"
