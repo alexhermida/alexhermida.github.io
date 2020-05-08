@@ -7,7 +7,7 @@ Hello! I'm Álex, a Software Engineer from Spain.
 
 Nowdays I work helping to find new treatments for rare diseases at [Healx](https://healx.io) an AI-driven company based in Cambridge. Previously, I worked in [Taiga.io](https://taiga.io), I founded [Initios](https://www.initios.com/), a software company, and co-founded [Parkapp](https://www.parkapp.com/) among other things.
 
-I had a wide experience in I.T projects and I'm also a computer security enthusiast. I think that the most valuable thing for achieving the goals is communication.
+I had a wide experience in I.T projects and I'm also a computer security enthusiast. I like to work as team facilitator and I think that the most valuable thing for achieving the goals is communication.
 
 [Agile manifesto](http://agilemanifesto.org/) fan:
 
