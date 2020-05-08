@@ -1,16 +1,15 @@
 # Sources for alexhermida.github.io
 
-* Development
+## Development
 
-  ```
-    $ hugo server -D
+  ```bash
+    hugo server -D
   ```
 
-* Production
+## Production
 
-  ```
-    $ hugo -t academic
-    $ cd public/
-    $ git add . && git commit
-    $ git push
+Test the site is well generated.
+
+  ```bash
+    hugo server
   ```
