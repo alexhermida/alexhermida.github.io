@@ -14,12 +14,12 @@ categories = [
 
 Hello!
 
-Today, I start over with a personal blog after years of silence. I guess never is late for doing it. I say _start over_ because I had a blog in the past but that's another story.
+Today, I start over with a personal blog after years of silence. I guess never is late for doing it. I have said _start over_ because I had a blog in the past, but that's another story.
 <!--more-->
-My aim's just to keep a personal reference for experiences and consolidate new knowledge whilst I share them with you. I'll be talking mainly about tech and related stuff.
+My aim's just to keep a personal reference for experiences and consolidate new knowledge while I share them with you. I'll be talking mainly about tech and related stuff.
 
 If you came from the future and you found here valuable content or my future me does, it's more than enough.
 
-You are from Spain, so why do you write in English? Selfishly to improve my communicating skills.
+Why do I write in English? Selfishly, to improve my communicating skills.
 
-Apertas!
+Cheers.
