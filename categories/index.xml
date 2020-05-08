@@ -1,24 +1,25 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Categories on AHR</title>
-    <link>https://alexhermida.dev/categories/</link>
+    <link>/categories/</link>
     <description>Recent content in Categories on AHR</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-en</language>
     <copyright>2020 - @alexhermida</copyright>
     <lastBuildDate>Thu, 07 May 2020 20:34:11 +0200</lastBuildDate>
     
-	<atom:link href="https://alexhermida.dev/categories/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>personal</title>
-      <link>https://alexhermida.dev/categories/personal/</link>
+      <link>/categories/personal/</link>
       <pubDate>Thu, 07 May 2020 20:34:11 +0200</pubDate>
       
-      <guid>https://alexhermida.dev/categories/personal/</guid>
+      <guid>/categories/personal/</guid>
       <description></description>
+      
     </item>
     
   </channel>

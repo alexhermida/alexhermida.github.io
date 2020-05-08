@@ -1,45 +1,48 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>python on AHR</title>
-    <link>https://alexhermida.dev/tags/python/</link>
+    <link>/tags/python/</link>
     <description>Recent content in python on AHR</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-en</language>
     <copyright>2020 - @alexhermida</copyright>
     <lastBuildDate>Tue, 13 Nov 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://alexhermida.dev/tags/python/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="/tags/python/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Python tools</title>
-      <link>https://alexhermida.dev/talks/20181108-python-tools/</link>
+      <link>/talks/20181108-python-tools/</link>
       <pubDate>Tue, 13 Nov 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://alexhermida.dev/talks/20181108-python-tools/</guid>
+      <guid>/talks/20181108-python-tools/</guid>
       <description>Small talk about useful tools written in Python at VigoJUG meetup in November 8, 2018.
 Slides: https://github.com/alexhermida/talks/tree/master/python-tools</description>
+      
     </item>
     
     <item>
       <title>This summer master the mosquittos</title>
-      <link>https://alexhermida.dev/talks/20170720-python-mqtt-broker/</link>
+      <link>/talks/20170720-python-mqtt-broker/</link>
       <pubDate>Fri, 13 Apr 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://alexhermida.dev/talks/20170720-python-mqtt-broker/</guid>
+      <guid>/talks/20170720-python-mqtt-broker/</guid>
       <description>Lightning talk about MQTT broker and Python Client.
   </description>
+      
     </item>
     
     <item>
       <title>Python special methods for muggles</title>
-      <link>https://alexhermida.dev/talks/20160317-python-special-methods/</link>
+      <link>/talks/20160317-python-special-methods/</link>
       <pubDate>Wed, 28 Mar 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://alexhermida.dev/talks/20160317-python-special-methods/</guid>
+      <guid>/talks/20160317-python-special-methods/</guid>
       <description>Presentation about Python special methods for Python Vigo.
   </description>
+      
     </item>
     
   </channel>

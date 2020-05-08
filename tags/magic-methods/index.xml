@@ -1,25 +1,26 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>magic methods on AHR</title>
-    <link>https://alexhermida.dev/tags/magic-methods/</link>
+    <link>/tags/magic-methods/</link>
     <description>Recent content in magic methods on AHR</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-en</language>
     <copyright>2020 - @alexhermida</copyright>
     <lastBuildDate>Wed, 28 Mar 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://alexhermida.dev/tags/magic-methods/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="/tags/magic-methods/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Python special methods for muggles</title>
-      <link>https://alexhermida.dev/talks/20160317-python-special-methods/</link>
+      <link>/talks/20160317-python-special-methods/</link>
       <pubDate>Wed, 28 Mar 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://alexhermida.dev/talks/20160317-python-special-methods/</guid>
+      <guid>/talks/20160317-python-special-methods/</guid>
       <description>Presentation about Python special methods for Python Vigo.
   </description>
+      
     </item>
     
   </channel>
