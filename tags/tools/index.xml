@@ -1,25 +1,2 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Tools on My blog, my thoughts.</title>
-    <link>https://alexhermida.dev/tags/tools/</link>
-    <description>Recent content in Tools on My blog, my thoughts.</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <copyright>&amp;copy; 2018</copyright>
-    <lastBuildDate>Tue, 13 Nov 2018 00:00:00 +0100</lastBuildDate>
-    
-	<atom:link href="https://alexhermida.dev/tags/tools/index.xml" rel="self" type="application/rss+xml" />
-    
-    
-    <item>
-      <title>Python tools</title>
-      <link>https://alexhermida.dev/talk/20181108-python-tools/</link>
-      <pubDate>Tue, 13 Nov 2018 00:00:00 +0100</pubDate>
-      
-      <guid>https://alexhermida.dev/talk/20181108-python-tools/</guid>
-      <description>Small talk about useful tools written in Python at VigoJUG meetup in November 8, 2018.</description>
-    </item>
-    
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>tools on AHR</title><link>https://alexhermida.dev/tags/tools/</link><description>Recent content in tools on AHR</description><generator>Hugo -- gohugo.io</generator><language>en-en</language><copyright>2020 - @alexhermida</copyright><lastBuildDate>Tue, 13 Nov 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://alexhermida.dev/tags/tools/index.xml" rel="self" type="application/rss+xml"/><item><title>Python tools</title><link>https://alexhermida.dev/talks/20181108-python-tools/</link><pubDate>Tue, 13 Nov 2018 00:00:00 +0000</pubDate><guid>https://alexhermida.dev/talks/20181108-python-tools/</guid><description>Small talk about useful tools written in Python at VigoJUG meetup in November 8, 2018.
+Slides: https://github.com/alexhermida/talks/tree/master/python-tools</description></item></channel></rss>
