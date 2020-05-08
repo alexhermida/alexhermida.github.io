@@ -23,24 +23,10 @@ url_pdf = ""
 url_slides = "https://github.com/alexhermida/talks/tree/master/special-methods-for-muggles"
 url_video = "https://www.youtube.com/watch?v=IY_6vY-M60Y"
 url_code = ""
-
 tags = ["python", "magic methods", "introduction"]
-
-# Does the content use math formatting?
-math = false
-
-# Does the content use source code highlighting?
-highlight = true
-
-# Featured image
-# Place your image in the `static/img/` folder and reference its filename below, e.g. `image = "example.jpg"`.
-[header]
-image = ""
-caption = "My caption :smile:"
 
 +++
 
 Presentation about Python special methods for Python Vigo.
 
 {{< youtube IY_6vY-M60Y >}}
-
