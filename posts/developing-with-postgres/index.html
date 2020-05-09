@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en"><meta charset="utf-8"><meta name="generator" content="Hugo 0.70.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark"><title>Scaling PostgreSQL from a developer point of view.&nbsp;&ndash;&nbsp;AHR</title><link rel="stylesheet" href="/css/core.min.d395a79dded74421e74ec643c2073f04f7ce037c87be755c7ca30a168d12828f30f6f6f16faa88e38c1d1a9d5d107d88.css" integrity="sha384-05Wnnd7XRCHnTsZDwgc/BPfOA3yHvnVcfKMKFo0Sgo8w9vbxb6qI44wdGp1dEH2I"><meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Scaling PostgreSQL from a developer point of view." /><body><section id="header">
+    <div class="header wrap"><span class="header left-side"><a class="site home" href="/"><span class="site name">AHR</span></a></span>
+        <span class="header right-side"><div class="nav wrap"><nav class="nav"><a class="nav item" href="/tags/">Tags</a><a class="nav item" href="/talks">Talks</a><a class="nav item" href="/about">About</a></nav></div></span></div></section><section id="content"><div class="article-container"><section class="article header">
+    <h1 class="article title">Scaling PostgreSQL from a developer point of view.</h1><p class="article date">Monday, June 10, 2019</p></section><article class="article markdown-body"><p>As a developer, you have to deal with databases from time to time in your work-life, and if you are a web developer probably making queries, it is something you are facing daily.</p>
+<p>Since I&rsquo;m not a database administrator nor a PostgreSQL expert I only want to give some small tips if you are dealing with scaling issues or starting with PostgreSQL and you want to know more about some underlying processes.</p>
+<p>Things you must take into account when you add a query to your code:</p>
+<ul>
+<li>Indexes</li>
+<li>Explain (planner)</li>
+<li>Vaccum</li>
+</ul>
+<h2 id="indexes">Indexes</h2>
+<p><code>CREATE INDEX</code></p>
+<p>Probably this is one of the things that every developer take care of when is trying to improve a query or implementing some complex one. Regardless
+<em>indexes</em> is one of the most important things in a query plan; it also can have counterparts.</p>
+<ul>
+<li>B-tree: Is the default option when you create an index and is recommended to handle equality, range queries using <a href="https://www.postgresql.org/docs/current/functions-comparison.html"target="_blank">basic comparison</a>. It also works well with sorted data.</li>
+<li>Hash: It can only handle equality comparisons although they are <a href="https://www.postgresql.org/docs/7.2/indexes-types.html"target="_blank">discouraged</a> because the need of reindexing in case of database crash and there is no probe of performance improvements with B-tree. Although PostgreSQL 10 is crash-safe.</li>
+<li>GiST (Generalized Search Tree): Give us a complex system for implementing different strategies depending on the data types. Are good for geometric data types and full-text search. It has <a href="https://www.postgresql.org/docs/current/gist-builtin-opclasses.html"target="_blank">built-in operator classes</a> although
+you can extend it.</li>
+<li>SP-GiST (space-partitioned GiST): Similar to GiST s meat to allow the development of custom data types but supports partitioned search trees for use with unbalanced data structures.</li>
+<li>GIN (Generalized Inverted Index): Are suitable for dealing with composite values like array values or JSONB.</li>
+<li>BRIN (Block Range INdexes): For handling large datasets created sequentially. The index group adjacent datasets in the table with blocks. This type allows also to save a lot of disk space because it keeps an index entry for the block itself instead of the tuple.</li>
+</ul>
+<p>As you can see, some of the Indexes types, like GIN or GiST, are more worried about the knowledge of the data types rather than a database size or structure.</p>
+<p>In general, the use of indexes is essential for excellent performance, and it is something that you have to take care of as a developer. To implement it, you must take into account:</p>
+<ul>
+<li>Lookups performed</li>
+<li>The data type</li>
+<li>Underlying data within the table</li>
+</ul>
+<p>With these three variables, you must decide what index you have to choose for improving your queries. How can you evaluate it in PostgreSQL? With <code>EXPLAIN</code>.</p>
+<h2 id="planner">Planner</h2>
+<p>Within the internal structure of PostgreSQL, you can find the &ldquo;Planner&rdquo;, which is in charge of looking for the best execution plan for a SQL query. In the <a href="https://www.postgresql.org/docs/9.5/planner-optimizer.html"target="_blank">official documentation</a> there is much documentation regarding how the internals work. I only try to give some clues about how you can analyze a specific query.</p>
+<p>After parsing the query, PostgreSQL will try to:</p>
+<ol>
+<li>Generate different execution plans</li>
+<li>Calculate the cost of each plan</li>
+<li>Select the best one to execute the query</li>
+</ol>
+<p>Since you can&rsquo;t guess your query behaviour <em>EXPLAIN</em> will be your main tool.</p>
+<p><code>EXPLAIN</code> help you to view how the planner interprets queries and determines the optimal execution. Combining it with options like <em>ANALYZE, COSTS, or VERBOSE</em> gives you the plan chosen by the planner. When you execute <em>EXPLAIN</em> you get some result like:</p>
+<pre><code>$ EXPLAIN ANALYZE select * from test WHERE num=164;
+                                                      QUERY PLAN
+-----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..8325.47 rows=483 width=41) (actual time=10.448..260.448 rows=509 loops=1)
+   Workers Planned: 2
+   Workers Launched: 2
+   -&gt;  Parallel Seq Scan on test  (cost=0.00..7277.17 rows=201 width=41) (actual time=5.214..236.655 rows=170 loops=3)
+         Filter: (num = 164)
+         Rows Removed by Filter: 166497
+ Planning time: 6.670 ms
+ Execution time: 263.254 ms
+(8 rows)
+
+Time: 327,272 ms
+
+</code></pre><p>Using the keyword <em>ANALYZE</em> you will have more detail but take care because the query will be executed!. For detail understanding of it you can go to the PosgreSQL <a href="https://www.postgresql.org/docs/9.5/using-explain.html"target="_blank">docs</a>. I will only give some little advice about some key points.</p>
+<ul>
+<li>Check the total cost and time. The upper-level node includes all children costs.</li>
+<li>Review what indexes are being used in every particular node.</li>
+<li>Review access methods for every node (Sequential Scan, Index Scan, Bitmap Heap Scan)</li>
+<li>Like in any programming language nest matters quite a lot.</li>
+</ul>
+<p>For analysis, you have some online tools:</p>
+<ul>
+<li><a href="https://tatiyants.com/pev/">https://tatiyants.com/pev/</a></li>
+<li><a href="https://explain.depesz.com">https://explain.depesz.com</a></li>
+</ul>
+<p>Or you can also use some local tool, even some IDE&rsquo;s like PyCharm/Intellij has the feature of showing the query plan as a diagram.</p>
+<p>You can find additional information at <a href="https://www.postgresql.org/docs/current/indexes-types.html">https://www.postgresql.org/docs/current/indexes-types.html</a></p>
+<h2 id="vaccum">Vaccum</h2>
+<p>Vaccum can be another key feature when you are scaling up. The Vaccum primary job is to reclaim storage space occupied by dead tuples so it can be available to be re-used by future data insertion within the same table.
+I think that the latest versions of PostgreSQL do a good job on this, and if you have the autovacuum active it works very well. Although you can tweak the configuration if it&rsquo;s necessary, I would say if you are developer and not PostgreSQL expert, keep away of doing it.</p>
+<p>Nevertheless, you always have the possibility of executing the process manually in specific cases. Vaccum can run in two different ways in PostgreSQL.</p>
+<ol>
+<li>Plain Vaccum</li>
+</ol>
+<p>When you run the <code>VACCUM</code> statement, reclaimed storage space is not given back to the operating system rather they are just defragmented within the same page but there is no exclusive lock and can run in parallel with normal read and writing.</p>
+<ol>
+<li>Full Vaccum</li>
+</ol>
+<p><code>VACCUM FULL</code> return the disk space to the operating system but creates an exclusive lock on each table while it is being processed.</p>
+<p>I hope these brief notes can give you a better understanding of what it&rsquo;s behind the scenes.</p>
+<p>Cheers!</p></article><section class="article labels"><a class="category" href=/categories/databases/>databases</a><a class="tag" href=/tags/postgresql/>PostgreSQL</a><a class="tag" href=/tags/data/>data</a></section><section class="article author"><div class="details"><a class="item" href="https://github.com/alexhermida" target="_blank"><span class="iconfont icon-github"></span>&nbsp;alexhermida</a><a class="item" href="https://twitter.com/alexhermida" target="_blank"><span class="iconfont icon-twitter"></span>&nbsp;@alexhermida</a></div>
+</section></div>
+<div class="article bottom"><section class="article navigation"><p><a class="link" href="/posts/first-post/"><span class="li iconfont icon-article"></span>Start over</a></p></section></div></section><section id="footer"><div class="footer-wrap">
+    <p class="copyright">2020 - @alexhermida</p>
+    <p class="powerby"><span>Powered by </span><a href="https://gohugo.io" 
+        target="_blank">Hugo</a><span> and the </span><a href="https://themes.gohugo.io/hugo-notepadium/" 
+        target="_blank">Notepadium</a></p>
+</div></section>
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-34397297-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+</body>
+
+</html>

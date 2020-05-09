@@ -1,27 +1,16 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Posts on AHR</title>
-    <link>/posts/</link>
-    <description>Recent content in Posts on AHR</description>
+    <title>databases on AHR</title>
+    <link>/categories/databases/</link>
+    <description>Recent content in databases on AHR</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-en</language>
     <copyright>2020 - @alexhermida</copyright>
-    <lastBuildDate>Fri, 08 May 2020 17:42:20 +0200</lastBuildDate>
+    <lastBuildDate>Mon, 10 Jun 2019 00:00:00 +0000</lastBuildDate>
     
-        <atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="/categories/databases/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Start over</title>
-      <link>/posts/first-post/</link>
-      <pubDate>Thu, 07 May 2020 20:34:11 +0200</pubDate>
-      
-      <guid>/posts/first-post/</guid>
-      <description>&lt;p&gt;Hello!&lt;/p&gt;
-&lt;p&gt;Today, I start over with a personal blog after years of silence. I guess never is late for doing it. I have said &lt;em&gt;start over&lt;/em&gt; because I had a blog in the past, but that&amp;rsquo;s another story.&lt;/p&gt;</description>
-      
-    </item>
     
     <item>
       <title>Scaling PostgreSQL from a developer point of view.</title>
