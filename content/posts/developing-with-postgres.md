@@ -1,6 +1,6 @@
 +++
 title = "Scaling PostgreSQL from a developer point of view."
-
+cover = "/img/postgresql-horizontal.svg"
 date = 2019-06-10
 draft = false
 
@@ -9,9 +9,6 @@ categories = [
 ]
 tags = ["PostgreSQL", "data"]
 
-[header]
-image = "postgresql_logo.svg"
-caption = "Credit: [**PostgreSQL**](https://wiki.postgresql.org/wiki/Logo)"
 
 +++
 
