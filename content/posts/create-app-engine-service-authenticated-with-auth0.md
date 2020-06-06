@@ -1,6 +1,6 @@
 +++
 title = "Quick overview for deploying backend API with Google App Engine and Auth0."
-cover = "/img/postgresql-horizontal.svg"
+cover = "/img/appengine-auth0.png"
 date = 2020-06-06
 draft = false
 
