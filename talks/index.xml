@@ -15,7 +15,7 @@
     <item>
       <title>Python tools</title>
       <link>/talks/20181108-python-tools/</link>
-      <pubDate>Tue, 13 Nov 2018 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 20 Nov 2018 00:00:00 +0000</pubDate>
       
       <guid>/talks/20181108-python-tools/</guid>
       <description>Small talk about useful tools written in Python at VigoJUG meetup in November 8, 2018.
@@ -24,20 +24,9 @@ Slides: https://github.com/alexhermida/talks/tree/master/python-tools</descripti
     </item>
     
     <item>
-      <title>Artesanos del futuro</title>
-      <link>/talks/20170221-artesanos-del-futuro/</link>
-      <pubDate>Fri, 13 Apr 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/talks/20170221-artesanos-del-futuro/</guid>
-      <description>Charla realizada en el High School Developers Parade Vigo 2017 evento organizado por el GDGVigo GDGVigo.
-  </description>
-      
-    </item>
-    
-    <item>
       <title>This summer master the mosquittos</title>
       <link>/talks/20170720-python-mqtt-broker/</link>
-      <pubDate>Fri, 13 Apr 2018 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 20 Jul 2017 00:00:00 +0000</pubDate>
       
       <guid>/talks/20170720-python-mqtt-broker/</guid>
       <description>Lightning talk about MQTT broker and Python Client.
@@ -46,9 +35,20 @@ Slides: https://github.com/alexhermida/talks/tree/master/python-tools</descripti
     </item>
     
     <item>
+      <title>Artesanos del futuro</title>
+      <link>/talks/20170221-artesanos-del-futuro/</link>
+      <pubDate>Tue, 21 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/talks/20170221-artesanos-del-futuro/</guid>
+      <description>Charla realizada en el High School Developers Parade Vigo 2017 evento organizado por el GDGVigo GDGVigo.
+  </description>
+      
+    </item>
+    
+    <item>
       <title>Python special methods for muggles</title>
       <link>/talks/20160317-python-special-methods/</link>
-      <pubDate>Wed, 28 Mar 2018 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 17 Mar 2016 00:00:00 +0000</pubDate>
       
       <guid>/talks/20160317-python-special-methods/</guid>
       <description>Presentation about Python special methods for Python Vigo.

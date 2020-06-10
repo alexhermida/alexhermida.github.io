@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-en</language>
     <copyright>2020 - @alexhermida</copyright>
-    <lastBuildDate>Tue, 13 Nov 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 20 Nov 2018 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/tags/tools/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,7 +15,7 @@
     <item>
       <title>Python tools</title>
       <link>/talks/20181108-python-tools/</link>
-      <pubDate>Tue, 13 Nov 2018 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 20 Nov 2018 00:00:00 +0000</pubDate>
       
       <guid>/talks/20181108-python-tools/</guid>
       <description>Small talk about useful tools written in Python at VigoJUG meetup in November 8, 2018.

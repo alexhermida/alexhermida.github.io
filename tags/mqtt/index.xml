@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-en</language>
     <copyright>2020 - @alexhermida</copyright>
-    <lastBuildDate>Fri, 13 Apr 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 20 Jul 2017 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/tags/mqtt/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,7 +15,7 @@
     <item>
       <title>This summer master the mosquittos</title>
       <link>/talks/20170720-python-mqtt-broker/</link>
-      <pubDate>Fri, 13 Apr 2018 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 20 Jul 2017 00:00:00 +0000</pubDate>
       
       <guid>/talks/20170720-python-mqtt-broker/</guid>
       <description>Lightning talk about MQTT broker and Python Client.

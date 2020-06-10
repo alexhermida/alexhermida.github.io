@@ -85,7 +85,7 @@
     <item>
       <title>python</title>
       <link>/tags/python/</link>
-      <pubDate>Tue, 13 Nov 2018 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 20 Nov 2018 00:00:00 +0000</pubDate>
       
       <guid>/tags/python/</guid>
       <description></description>
@@ -95,7 +95,7 @@
     <item>
       <title>tools</title>
       <link>/tags/tools/</link>
-      <pubDate>Tue, 13 Nov 2018 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 20 Nov 2018 00:00:00 +0000</pubDate>
       
       <guid>/tags/tools/</guid>
       <description></description>
@@ -103,29 +103,9 @@
     </item>
     
     <item>
-      <title>emprender</title>
-      <link>/tags/emprender/</link>
-      <pubDate>Fri, 13 Apr 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/emprender/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>GDG</title>
-      <link>/tags/gdg/</link>
-      <pubDate>Fri, 13 Apr 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/gdg/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
       <title>mosquitto</title>
       <link>/tags/mosquitto/</link>
-      <pubDate>Fri, 13 Apr 2018 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 20 Jul 2017 00:00:00 +0000</pubDate>
       
       <guid>/tags/mosquitto/</guid>
       <description></description>
@@ -135,7 +115,7 @@
     <item>
       <title>mqtt</title>
       <link>/tags/mqtt/</link>
-      <pubDate>Fri, 13 Apr 2018 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 20 Jul 2017 00:00:00 +0000</pubDate>
       
       <guid>/tags/mqtt/</guid>
       <description></description>
@@ -143,9 +123,29 @@
     </item>
     
     <item>
+      <title>emprender</title>
+      <link>/tags/emprender/</link>
+      <pubDate>Tue, 21 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/emprender/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>GDG</title>
+      <link>/tags/gdg/</link>
+      <pubDate>Tue, 21 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/gdg/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
       <title>passion</title>
       <link>/tags/passion/</link>
-      <pubDate>Fri, 13 Apr 2018 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 21 Feb 2017 00:00:00 +0000</pubDate>
       
       <guid>/tags/passion/</guid>
       <description></description>
@@ -155,7 +155,7 @@
     <item>
       <title>startups</title>
       <link>/tags/startups/</link>
-      <pubDate>Fri, 13 Apr 2018 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 21 Feb 2017 00:00:00 +0000</pubDate>
       
       <guid>/tags/startups/</guid>
       <description></description>
@@ -165,7 +165,7 @@
     <item>
       <title>magic methods</title>
       <link>/tags/magic-methods/</link>
-      <pubDate>Wed, 28 Mar 2018 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 17 Mar 2016 00:00:00 +0000</pubDate>
       
       <guid>/tags/magic-methods/</guid>
       <description></description>

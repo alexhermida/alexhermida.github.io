@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-en</language>
     <copyright>2020 - @alexhermida</copyright>
-    <lastBuildDate>Wed, 28 Mar 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 17 Mar 2016 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/tags/magic-methods/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,7 +15,7 @@
     <item>
       <title>Python special methods for muggles</title>
       <link>/talks/20160317-python-special-methods/</link>
-      <pubDate>Wed, 28 Mar 2018 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 17 Mar 2016 00:00:00 +0000</pubDate>
       
       <guid>/talks/20160317-python-special-methods/</guid>
       <description>Presentation about Python special methods for Python Vigo.
