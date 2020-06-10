@@ -66,7 +66,8 @@ You could just create your basic sample with any framework like Flask, FastAPI o
         return {"Root without authentication"}
   ```
 
-* requirements.txt: Requirements for your app. Take into account that GCloud uses
+* requirements.txt: Requirements for your app. Take into account that GCloud uses only `requirements.txt` file
+for the Python runtime. [Additional info](https://cloud.google.com/appengine/docs/flexible/python/using-python-libraries#declaring_and_managing_dependencies)
   
   ```txt
     click==7.1.2
