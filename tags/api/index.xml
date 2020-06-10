@@ -13,7 +13,7 @@
     
     
     <item>
-      <title>Quick overview for deploying backend API with Google App Engine and Auth0.</title>
+      <title>Quick overview for securing a backend API with Google App Engine and Auth0.</title>
       <link>/posts/create-app-engine-service-authenticated-with-auth0/</link>
       <pubDate>Sat, 06 Jun 2020 00:00:00 +0000</pubDate>
       
