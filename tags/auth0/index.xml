@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Auth0 on AHR</title>
+    <link>/tags/auth0/</link>
+    <description>Recent content in Auth0 on AHR</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-en</language>
+    <copyright>2020 - @alexhermida</copyright>
+    <lastBuildDate>Sat, 06 Jun 2020 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="/tags/auth0/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Quick overview for deploying backend API with Google App Engine and Auth0.</title>
+      <link>/posts/create-app-engine-service-authenticated-with-auth0/</link>
+      <pubDate>Sat, 06 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/create-app-engine-service-authenticated-with-auth0/</guid>
+      <description>&lt;p&gt;Google App Engine it&amp;rsquo;s a good product for quick API deployment and very easy to integrate with Auth0 for autentication.
+I&amp;rsquo;ll go through the basics concepts for deploying an API backend in Python.&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

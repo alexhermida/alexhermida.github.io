@@ -7,10 +7,50 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-en</language>
     <copyright>2020 - @alexhermida</copyright>
-    <lastBuildDate>Thu, 07 May 2020 20:34:11 +0200</lastBuildDate>
+    <lastBuildDate>Sat, 06 Jun 2020 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>api</title>
+      <link>/tags/api/</link>
+      <pubDate>Sat, 06 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/api/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>App Engine</title>
+      <link>/tags/app-engine/</link>
+      <pubDate>Sat, 06 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/app-engine/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Auth0</title>
+      <link>/tags/auth0/</link>
+      <pubDate>Sat, 06 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/auth0/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Google Cloud Platform</title>
+      <link>/tags/google-cloud-platform/</link>
+      <pubDate>Sat, 06 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/google-cloud-platform/</guid>
+      <description></description>
+      
+    </item>
     
     <item>
       <title>introduction</title>

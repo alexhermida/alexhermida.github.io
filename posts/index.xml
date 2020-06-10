@@ -13,6 +13,17 @@
     
     
     <item>
+      <title>Quick overview for deploying backend API with Google App Engine and Auth0.</title>
+      <link>/posts/create-app-engine-service-authenticated-with-auth0/</link>
+      <pubDate>Sat, 06 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/create-app-engine-service-authenticated-with-auth0/</guid>
+      <description>&lt;p&gt;Google App Engine it&amp;rsquo;s a good product for quick API deployment and very easy to integrate with Auth0 for autentication.
+I&amp;rsquo;ll go through the basics concepts for deploying an API backend in Python.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
       <title>Start over</title>
       <link>/posts/first-post/</link>
       <pubDate>Thu, 07 May 2020 20:34:11 +0200</pubDate>
