@@ -1,5 +1,5 @@
 +++
-date = 2018-03-28T00:00:00  # Schedule page publish date.
+date = 2016-03-17T00:00:00  # Schedule page publish date.
 
 title = "Python special methods for muggles"
 time_start = 2016-03-17T20:00:00
