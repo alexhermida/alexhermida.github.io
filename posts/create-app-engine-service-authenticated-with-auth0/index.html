@@ -54,7 +54,8 @@ many boilerplates from the <a href="https://github.com/GoogleCloudPlatform/pytho
       <span class="k">return</span> <span class="p">{</span><span class="s2">&#34;Root without authentication&#34;</span><span class="p">}</span>
 </code></pre></div></li>
 <li>
-<p>requirements.txt: Requirements for your app. Take into account that GCloud uses</p>
+<p>requirements.txt: Requirements for your app. Take into account that GCloud uses only <code>requirements.txt</code> file
+for the Python runtime. <a href="https://cloud.google.com/appengine/docs/flexible/python/using-python-libraries#declaring_and_managing_dependencies"target="_blank">Additional info</a></p>
 <div class="highlight"><pre class="chroma"><code class="language-txt" data-lang="txt">  click==7.1.2
   fastapi==0.55.1
   gunicorn==20.0.4
