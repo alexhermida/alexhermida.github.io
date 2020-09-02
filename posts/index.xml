@@ -13,6 +13,17 @@
     
     
     <item>
+      <title>Retrospective 2019-2020</title>
+      <link>/posts/retrospective-2019-2020/</link>
+      <pubDate>Wed, 02 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/retrospective-2019-2020/</guid>
+      <description>&lt;p&gt;Hello!&lt;/p&gt;
+&lt;p&gt;Usually, this is the typical post people write in December or in January. But for me, it has more sense to do it now, not only because everybody is hoping to come back to some &amp;ldquo;kind of&amp;rdquo; normality (ending the summer, new school-year&amp;hellip;) but also exactly one year ago I was starting a new adventure in Cambridge.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
       <title>Quick overview for securing a backend API with Google App Engine and Auth0.</title>
       <link>/posts/create-app-engine-service-authenticated-with-auth0/</link>
       <pubDate>Sat, 06 Jun 2020 00:00:00 +0000</pubDate>
