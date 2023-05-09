@@ -12,25 +12,25 @@ tags = ["python", "auth0"]
 
 +++
 
-👋 Let's talk about adding SSO to our CLIs, something really usefull for different reasons. Single Sign-On (SSO) it not only a common practice now a days in organisations but almost a must.
+👋 Let's talk about adding SSO to our CLIs, something really useful for different reasons. Single Sign-On (SSO) is not only a common practice nowadays in organisations but is almost a must.
 
-Although it looks challenging for many people at first glance, nowadays the integration it has been simplied thanks to the different services that help to abstract you from the complexity of the different flows. When it comes to the benefits of using SSO, there are many but some very specific for CLI applications.
+Although it looks challenging for many people at first glance, nowadays the integration has been simplified thanks to the different services that help to abstract you from the complexity of the different flows. When it comes to the benefits of using SSO, there are many but some are very specific for CLI applications.
 <!--more-->
 
 
-1. Simplifies the authentication process. CLI applications usually run locally in the user computer which means they're probably already using SSO for other services with an active session.
-2. Allow users to take advantage of a central identity provider (IdP), that could be any of the frequent mainstream social providers like Google, Microsoft, Github or any other over OIDC or SAML protocols.
-3. Increases security as the user doesn't need to mantain long lived secret keys, tokens or credentials for authentication.
+1. Simplifies the authentication process. CLI applications usually run locally in the user's computer which means they're probably already using SSO for other services with an active session.
+2. Allow users to take advantage of a central identity provider (IdP), which could be any of the frequent mainstream social providers like Google, Microsoft, Github or any other over OIDC or SAML protocols.
+3. Increases security as the user doesn't need to maintain long-lived secret keys, tokens or credentials for authentication.
 4. Allow better integration within other systems and services in the organisation.
 
 those, among others, are some of the benefits but each use case it's different,
-so what does CLI session flow different?
+so what makes CLI session flow different?
 
 ## Some context
 
-Whereas in a regular application which lives in the cloud the authorisation flow is "simpler", for a CLI application, where the source code lives in the user computer and you can't exchange a secret, a relatively new flow was defined within the [OAuth 2.0](https://datatracker.ietf.org/doc/html/rfc8628) protocol. The "Device authorisation grant". 
+Whereas in a regular application which lives in the cloud the authorisation flow is "simpler", for a CLI application, where the source code lives in the user's computer and you can't exchange a secret, a relatively new flow was defined within the [OAuth 2.0](https://datatracker.ietf.org/doc/html/rfc8628) protocol. The "Device authorisation grant".
 
-This new grant define a secondary "device" apart from the client where the application is executed. The user manually grant access through that "device".
+This new grant defines a secondary "device" apart from the client where the application is executed. The user manually grants access through that "device".
 
 ```diagram
       +----------+                                +----------------+
@@ -62,9 +62,9 @@ This new grant define a secondary "device" apart from the client where the appli
 
 ## Coding time
 
-For learning purpose I created a new CLI tool with a minimum configuration, and
+For learning purpose, I created a new CLI tool with a minimum configuration, and
 for this specific example I used **Auth0** as the Identity Provider (IdP), but you can easily
-configure it for using with other providers like **Okta, Amazon Cognito or others.**
+configure it for use with other providers like **Okta, Amazon Cognito or others.**
 
 > If you want to run and test it you'd need at least the following requirements:
 > * to create you own **Navite application**
@@ -78,8 +78,8 @@ configure it for using with other providers like **Okta, Amazon Cognito or other
 
 ### Request device code
 
-As described in the flow diagram, first step is to request a temporary device code that can be used for propmt the
-user for the device activation. For that, the IdP give us an endpoint where we can request that device code using
+As described in the flow diagram, the first step is to request a temporary device code that can be used to prompt the
+user for device activation. For that, the IdP give us an endpoint where we can request that device code using
 the audience and client_id parameters.
 
 ```python
@@ -103,7 +103,7 @@ def request_device_code() -> DeviceCodeResponse:
 
 ### User device activation
 
-The `device code response` includes different information for enabling the user to activate and to manage the CLI session,
+The `device code response` includes different information for enabling the user to activate and manage the CLI session,
 
 ```python
 @dataclass
@@ -118,12 +118,12 @@ class DeviceCodeResponse:
 
 For this use case, the most relevant is the `user_code` along with the `verification_uri`, the user can copy&paste and go the
 URL or just directly open `verification_uri_complete` in a browser to manually activate the CLI. For this step, the user 
-needs to be logged in with the appropiate credentials, either a social login (google, github, etc) or a database connection.
+needs to be logged in with the appropriate credentials, either a social login (google, github, etc) or a database connection.
 
 ### Request access token
 
-The CLI needs to request and to store the access token, meanwhile the user is manually validating the device, the CLI is making
-a polling to the token URL provided by the IdP on a defined interval.
+The CLI needs to request and store the access token, meanwhile, the user is manually validating the device, and the CLI is making
+polling to the token URL provided by the IdP on a defined interval.
 
 ```python
 def _request_access_token(code: str):
@@ -169,20 +169,20 @@ class ReceivedCredentials:
 ```
 
 
-### Call you API with the credentials
+### Call your API with the credentials
 
 The `access_token`is a JWT (JSON Web Token) that follows the [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519) and you
-can validate and verify for providing access to you APIs and resources. For that, you can call your API passing the access_token
+can validate and verify for providing access to your APIs and resources. For that, you can call your API passing the access_token
 as a bearer token in the request header.
 
 
 ## Sumary
 
-The code above implementes a basic solution for SSO in you CLI, of course, there are different missing pieces like `refresh_tokens`,
+The code above implements a basic solution for SSO in your CLI, of course, there are different missing pieces like `refresh_tokens`,
 managing access through `scopes` or handling `profiles` which could help to understand better how this work in a corporate
 environment.
 
-For reference, if you want to follow up on the previous examples, all code snippets presents in this post are available at:
+For reference, if you want to follow up on the previous examples, all code snippets present in this post are available at:
 https://github.com/alexhermida/sample_sso_cli
 
 
