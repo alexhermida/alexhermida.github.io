@@ -17,20 +17,20 @@
       <pubDate>Tue, 09 May 2023 00:00:00 +0000</pubDate>
       
       <guid>https://alexhermida.dev/posts/building-cli-with-sso/</guid>
-      <description>&lt;p&gt;👋 Let&amp;rsquo;s talk about adding SSO to our CLIs, something really usefull for different reasons. Single Sign-On (SSO) it not only a common practice now a days in organisations but almost a must.&lt;/p&gt;
-&lt;p&gt;Although it looks challenging for many people at first glance, nowadays the integration it has been simplied thanks to the different services that help to abstract you from the complexity of the different flows. When it comes to the benefits of using SSO, there are many but some very specific for CLI applications.&lt;/p&gt;
+      <description>&lt;p&gt;👋 Let&amp;rsquo;s talk about adding SSO to our CLIs, something really useful for different reasons. Single Sign-On (SSO) is not only a common practice nowadays in organisations but is almost a must.&lt;/p&gt;
+&lt;p&gt;Although it looks challenging for many people at first glance, nowadays the integration has been simplified thanks to the different services that help to abstract you from the complexity of the different flows. When it comes to the benefits of using SSO, there are many but some are very specific for CLI applications.&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;Simplifies the authentication process. CLI applications usually run locally in the user computer which means they&amp;rsquo;re probably already using SSO for other services with an active session.&lt;/li&gt;
-&lt;li&gt;Allow users to take advantage of a central identity provider (IdP), that could be any of the frequent mainstream social providers like Google, Microsoft, Github or any other over OIDC or SAML protocols.&lt;/li&gt;
-&lt;li&gt;Increases security as the user doesn&amp;rsquo;t need to mantain long lived secret keys, tokens or credentials for authentication.&lt;/li&gt;
+&lt;li&gt;Simplifies the authentication process. CLI applications usually run locally in the user&amp;rsquo;s computer which means they&amp;rsquo;re probably already using SSO for other services with an active session.&lt;/li&gt;
+&lt;li&gt;Allow users to take advantage of a central identity provider (IdP), which could be any of the frequent mainstream social providers like Google, Microsoft, Github or any other over OIDC or SAML protocols.&lt;/li&gt;
+&lt;li&gt;Increases security as the user doesn&amp;rsquo;t need to maintain long-lived secret keys, tokens or credentials for authentication.&lt;/li&gt;
 &lt;li&gt;Allow better integration within other systems and services in the organisation.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;those, among others, are some of the benefits but each use case it&amp;rsquo;s different,
-so what does CLI session flow different?&lt;/p&gt;
+so what makes CLI session flow different?&lt;/p&gt;
 &lt;h2 id=&#34;some-context&#34;&gt;Some context&lt;/h2&gt;
-&lt;p&gt;Whereas in a regular application which lives in the cloud the authorisation flow is &amp;ldquo;simpler&amp;rdquo;, for a CLI application, where the source code lives in the user computer and you can&amp;rsquo;t exchange a secret, a relatively new flow was defined within the &lt;a href=&#34;https://datatracker.ietf.org/doc/html/rfc8628&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;OAuth 2.0&lt;/a&gt;
+&lt;p&gt;Whereas in a regular application which lives in the cloud the authorisation flow is &amp;ldquo;simpler&amp;rdquo;, for a CLI application, where the source code lives in the user&amp;rsquo;s computer and you can&amp;rsquo;t exchange a secret, a relatively new flow was defined within the &lt;a href=&#34;https://datatracker.ietf.org/doc/html/rfc8628&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;OAuth 2.0&lt;/a&gt;
  protocol. The &amp;ldquo;Device authorisation grant&amp;rdquo;.&lt;/p&gt;
-&lt;p&gt;This new grant define a secondary &amp;ldquo;device&amp;rdquo; apart from the client where the application is executed. The user manually grant access through that &amp;ldquo;device&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;This new grant defines a secondary &amp;ldquo;device&amp;rdquo; apart from the client where the application is executed. The user manually grants access through that &amp;ldquo;device&amp;rdquo;.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-diagram&#34; data-lang=&#34;diagram&#34;&gt;      +----------+                                +----------------+
       |          |&amp;gt;---(A)-- Client Identifier ---&amp;gt;|                |
       |          |                                |                |
@@ -57,9 +57,9 @@ so what does CLI session flow different?&lt;/p&gt;
 
                     Figure 1: Device Authorization Flow
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;coding-time&#34;&gt;Coding time&lt;/h2&gt;
-&lt;p&gt;For learning purpose I created a new CLI tool with a minimum configuration, and
+&lt;p&gt;For learning purpose, I created a new CLI tool with a minimum configuration, and
 for this specific example I used &lt;strong&gt;Auth0&lt;/strong&gt; as the Identity Provider (IdP), but you can easily
-configure it for using with other providers like &lt;strong&gt;Okta, Amazon Cognito or others.&lt;/strong&gt;&lt;/p&gt;
+configure it for use with other providers like &lt;strong&gt;Okta, Amazon Cognito or others.&lt;/strong&gt;&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;If you want to run and test it you&amp;rsquo;d need at least the following requirements:&lt;/p&gt;
 &lt;ul&gt;
@@ -73,8 +73,8 @@ in &lt;a href=&#34;https://auth0.com/docs/get-started/auth0-overview/create-appl
 &lt;p&gt;With that, you&amp;rsquo;d have the parameters needed for the OAuth flow, like client_id or audience.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h3 id=&#34;request-device-code&#34;&gt;Request device code&lt;/h3&gt;
-&lt;p&gt;As described in the flow diagram, first step is to request a temporary device code that can be used for propmt the
-user for the device activation. For that, the IdP give us an endpoint where we can request that device code using
+&lt;p&gt;As described in the flow diagram, the first step is to request a temporary device code that can be used to prompt the
+user for device activation. For that, the IdP give us an endpoint where we can request that device code using
 the audience and client_id parameters.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;request_device_code&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DeviceCodeResponse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
     &lt;span class=&#34;n&#34;&gt;headers&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;content-type&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;application/x-www-form-urlencoded&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
@@ -92,7 +92,7 @@ the audience and client_id parameters.&lt;/p&gt;
     &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;device_code_info&lt;/span&gt;
 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;user-device-activation&#34;&gt;User device activation&lt;/h3&gt;
-&lt;p&gt;The &lt;code&gt;device code response&lt;/code&gt; includes different information for enabling the user to activate and to manage the CLI session,&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;device code response&lt;/code&gt; includes different information for enabling the user to activate and manage the CLI session,&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@dataclass&lt;/span&gt;
 &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;DeviceCodeResponse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
     &lt;span class=&#34;n&#34;&gt;device_code&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;str&lt;/span&gt;
@@ -103,10 +103,10 @@ the audience and client_id parameters.&lt;/p&gt;
     &lt;span class=&#34;n&#34;&gt;verification_uri_complete&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;str&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For this use case, the most relevant is the &lt;code&gt;user_code&lt;/code&gt; along with the &lt;code&gt;verification_uri&lt;/code&gt;, the user can copy&amp;amp;paste and go the
 URL or just directly open &lt;code&gt;verification_uri_complete&lt;/code&gt; in a browser to manually activate the CLI. For this step, the user
-needs to be logged in with the appropiate credentials, either a social login (google, github, etc) or a database connection.&lt;/p&gt;
+needs to be logged in with the appropriate credentials, either a social login (google, github, etc) or a database connection.&lt;/p&gt;
 &lt;h3 id=&#34;request-access-token&#34;&gt;Request access token&lt;/h3&gt;
-&lt;p&gt;The CLI needs to request and to store the access token, meanwhile the user is manually validating the device, the CLI is making
-a polling to the token URL provided by the IdP on a defined interval.&lt;/p&gt;
+&lt;p&gt;The CLI needs to request and store the access token, meanwhile, the user is manually validating the device, and the CLI is making
+polling to the token URL provided by the IdP on a defined interval.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;_request_access_token&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;code&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;str&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
     &lt;span class=&#34;n&#34;&gt;headers&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;content-type&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;application/x-www-form-urlencoded&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
     &lt;span class=&#34;n&#34;&gt;payload&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
@@ -143,16 +143,16 @@ additional parameters depending on the API configuration.&lt;/p&gt;
     &lt;span class=&#34;n&#34;&gt;access_token&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;str&lt;/span&gt;
     &lt;span class=&#34;n&#34;&gt;expires_in&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;int&lt;/span&gt;
     &lt;span class=&#34;n&#34;&gt;token_type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;str&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;call-you-api-with-the-credentials&#34;&gt;Call you API with the credentials&lt;/h3&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;call-your-api-with-the-credentials&#34;&gt;Call your API with the credentials&lt;/h3&gt;
 &lt;p&gt;The &lt;code&gt;access_token&lt;/code&gt;is a JWT (JSON Web Token) that follows the &lt;a href=&#34;https://datatracker.ietf.org/doc/html/rfc7519&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;RFC7519&lt;/a&gt;
  and you
-can validate and verify for providing access to you APIs and resources. For that, you can call your API passing the access_token
+can validate and verify for providing access to your APIs and resources. For that, you can call your API passing the access_token
 as a bearer token in the request header.&lt;/p&gt;
 &lt;h2 id=&#34;sumary&#34;&gt;Sumary&lt;/h2&gt;
-&lt;p&gt;The code above implementes a basic solution for SSO in you CLI, of course, there are different missing pieces like &lt;code&gt;refresh_tokens&lt;/code&gt;,
+&lt;p&gt;The code above implements a basic solution for SSO in your CLI, of course, there are different missing pieces like &lt;code&gt;refresh_tokens&lt;/code&gt;,
 managing access through &lt;code&gt;scopes&lt;/code&gt; or handling &lt;code&gt;profiles&lt;/code&gt; which could help to understand better how this work in a corporate
 environment.&lt;/p&gt;
-&lt;p&gt;For reference, if you want to follow up on the previous examples, all code snippets presents in this post are available at:
+&lt;p&gt;For reference, if you want to follow up on the previous examples, all code snippets present in this post are available at:
 &lt;a href=&#34;https://github.com/alexhermida/sample_sso_cli&#34;&gt;https://github.com/alexhermida/sample_sso_cli&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Cheers!&lt;/p&gt;</description>
     </item>
