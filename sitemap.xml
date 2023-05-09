@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml"><url>
-    <loc>https://alexhermida.dev/</loc><lastmod>2020-09-02T00:00:00+00:00</lastmod><priority>0</priority></url><url>
-    <loc>https://alexhermida.dev/categories/</loc><lastmod>2020-09-02T00:00:00+00:00</lastmod></url><url>
+    <loc>https://alexhermida.dev/</loc><lastmod>2023-05-09T00:00:00+00:00</lastmod><priority>0</priority></url><url>
+    <loc>https://alexhermida.dev/tags/auth0/</loc><lastmod>2023-05-09T00:00:00+00:00</lastmod></url><url>
+    <loc>https://alexhermida.dev/posts/building-cli-with-sso/</loc><lastmod>2023-05-09T00:00:00+00:00</lastmod></url><url>
+    <loc>https://alexhermida.dev/categories/</loc><lastmod>2023-05-09T00:00:00+00:00</lastmod></url><url>
+    <loc>https://alexhermida.dev/categories/development/</loc><lastmod>2023-05-09T00:00:00+00:00</lastmod></url><url>
+    <loc>https://alexhermida.dev/tags/python/</loc><lastmod>2023-05-09T00:00:00+00:00</lastmod></url><url>
+    <loc>https://alexhermida.dev/tags/</loc><lastmod>2023-05-09T00:00:00+00:00</lastmod></url><url>
     <loc>https://alexhermida.dev/categories/personal/</loc><lastmod>2020-09-02T00:00:00+00:00</lastmod></url><url>
     <loc>https://alexhermida.dev/tags/retrospective/</loc><lastmod>2020-09-02T00:00:00+00:00</lastmod></url><url>
     <loc>https://alexhermida.dev/posts/retrospective-2019-2020/</loc><lastmod>2020-09-02T00:00:00+00:00</lastmod></url><url>
-    <loc>https://alexhermida.dev/tags/</loc><lastmod>2020-09-02T00:00:00+00:00</lastmod></url><url>
     <loc>https://alexhermida.dev/tags/work/</loc><lastmod>2020-09-02T00:00:00+00:00</lastmod></url><url>
     <loc>https://alexhermida.dev/tags/api/</loc><lastmod>2020-06-06T00:00:00+00:00</lastmod></url><url>
     <loc>https://alexhermida.dev/tags/app-engine/</loc><lastmod>2020-06-06T00:00:00+00:00</lastmod></url><url>
-    <loc>https://alexhermida.dev/tags/auth0/</loc><lastmod>2020-06-06T00:00:00+00:00</lastmod></url><url>
     <loc>https://alexhermida.dev/categories/backend/</loc><lastmod>2020-06-06T00:00:00+00:00</lastmod></url><url>
     <loc>https://alexhermida.dev/tags/google-cloud-platform/</loc><lastmod>2020-06-06T00:00:00+00:00</lastmod></url><url>
     <loc>https://alexhermida.dev/posts/create-app-engine-service-authenticated-with-auth0/</loc><lastmod>2020-06-06T00:00:00+00:00</lastmod></url><url>
@@ -21,7 +24,6 @@
     <loc>https://alexhermida.dev/categories/databases/</loc><lastmod>2019-06-10T00:00:00+00:00</lastmod></url><url>
     <loc>https://alexhermida.dev/tags/postgresql/</loc><lastmod>2019-06-10T00:00:00+00:00</lastmod></url><url>
     <loc>https://alexhermida.dev/posts/developing-with-postgres/</loc><lastmod>2019-06-10T00:00:00+00:00</lastmod></url><url>
-    <loc>https://alexhermida.dev/tags/python/</loc><lastmod>2018-11-20T00:00:00+00:00</lastmod></url><url>
     <loc>https://alexhermida.dev/talks/20181108-python-tools/</loc><lastmod>2018-11-20T00:00:00+00:00</lastmod></url><url>
     <loc>https://alexhermida.dev/tags/tools/</loc><lastmod>2018-11-20T00:00:00+00:00</lastmod></url><url>
     <loc>https://alexhermida.dev/tags/mosquitto/</loc><lastmod>2017-07-20T00:00:00+00:00</lastmod></url><url>

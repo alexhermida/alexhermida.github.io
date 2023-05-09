@@ -1,25 +1,551 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>databases on AHR</title>
-    <link>/categories/databases/</link>
+    <link>https://alexhermida.dev/categories/databases/</link>
     <description>Recent content in databases on AHR</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-en</language>
     <copyright>2020 - @alexhermida</copyright>
     <lastBuildDate>Mon, 10 Jun 2019 00:00:00 +0000</lastBuildDate>
     
-        <atom:link href="/categories/databases/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://alexhermida.dev/categories/databases/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Building a CLI with SSO</title>
+      <link>https://alexhermida.dev/posts/building-cli-with-sso/</link>
+      <pubDate>Tue, 09 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://alexhermida.dev/posts/building-cli-with-sso/</guid>
+      <description>&lt;p&gt;👋 Let&amp;rsquo;s talk about adding SSO to our CLIs, something really usefull for different reasons. Single Sign-On (SSO) it not only a common practice now a days in organisations but almost a must.&lt;/p&gt;
+&lt;p&gt;Although it looks challenging for many people at first glance, nowadays the integration it has been simplied thanks to the different services that help to abstract you from the complexity of the different flows. When it comes to the benefits of using SSO, there are many but some very specific for CLI applications.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Simplifies the authentication process. CLI applications usually run locally in the user computer which means they&amp;rsquo;re probably already using SSO for other services with an active session.&lt;/li&gt;
+&lt;li&gt;Allow users to take advantage of a central identity provider (IdP), that could be any of the frequent mainstream social providers like Google, Microsoft, Github or any other over OIDC or SAML protocols.&lt;/li&gt;
+&lt;li&gt;Increases security as the user doesn&amp;rsquo;t need to mantain long lived secret keys, tokens or credentials for authentication.&lt;/li&gt;
+&lt;li&gt;Allow better integration within other systems and services in the organisation.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;those, among others, are some of the benefits but each use case it&amp;rsquo;s different,
+so what does CLI session flow different?&lt;/p&gt;
+&lt;h2 id=&#34;some-context&#34;&gt;Some context&lt;/h2&gt;
+&lt;p&gt;Whereas in a regular application which lives in the cloud the authorisation flow is &amp;ldquo;simpler&amp;rdquo;, for a CLI application, where the source code lives in the user computer and you can&amp;rsquo;t exchange a secret, a relatively new flow was defined within the &lt;a href=&#34;https://datatracker.ietf.org/doc/html/rfc8628&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;OAuth 2.0&lt;/a&gt;
+ protocol. The &amp;ldquo;Device authorisation grant&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;This new grant define a secondary &amp;ldquo;device&amp;rdquo; apart from the client where the application is executed. The user manually grant access through that &amp;ldquo;device&amp;rdquo;.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-diagram&#34; data-lang=&#34;diagram&#34;&gt;      +----------+                                +----------------+
+      |          |&amp;gt;---(A)-- Client Identifier ---&amp;gt;|                |
+      |          |                                |                |
+      |          |&amp;lt;---(B)-- Device Code,      ---&amp;lt;|                |
+      |          |          User Code,            |                |
+      |  Device  |          &amp;amp; Verification URI    |                |
+      |  Client  |                                |                |
+      |          |  [polling]                     |                |
+      |          |&amp;gt;---(E)-- Device Code       ---&amp;gt;|                |
+      |          |          &amp;amp; Client Identifier   |                |
+      |          |                                |  Authorization |
+      |          |&amp;lt;---(F)-- Access Token      ---&amp;lt;|     Server     |
+      +----------+   (&amp;amp; Optional Refresh Token)   |                |
+            v                                     |                |
+            :                                     |                |
+           (C) User Code &amp;amp; Verification URI       |                |
+            :                                     |                |
+            v                                     |                |
+      +----------+                                |                |
+      | End User |                                |                |
+      |    at    |&amp;lt;---(D)-- End user reviews  ---&amp;gt;|                |
+      |  Browser |          authorization request |                |
+      +----------+                                +----------------+
+
+                    Figure 1: Device Authorization Flow
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;coding-time&#34;&gt;Coding time&lt;/h2&gt;
+&lt;p&gt;For learning purpose I created a new CLI tool with a minimum configuration, and
+for this specific example I used &lt;strong&gt;Auth0&lt;/strong&gt; as the Identity Provider (IdP), but you can easily
+configure it for using with other providers like &lt;strong&gt;Okta, Amazon Cognito or others.&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;If you want to run and test it you&amp;rsquo;d need at least the following requirements:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;to create you own &lt;strong&gt;Navite application&lt;/strong&gt;
+in &lt;a href=&#34;https://auth0.com/docs/get-started/auth0-overview/create-applications/native-apps&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;auth0&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;Enable social or a database connection&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://auth0.com/docs/get-started/architecture-scenarios/mobile-api/part-2#create-the-api&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Register your API&lt;/a&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;With that, you&amp;rsquo;d have the parameters needed for the OAuth flow, like client_id or audience.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;request-device-code&#34;&gt;Request device code&lt;/h3&gt;
+&lt;p&gt;As described in the flow diagram, first step is to request a temporary device code that can be used for propmt the
+user for the device activation. For that, the IdP give us an endpoint where we can request that device code using
+the audience and client_id parameters.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;request_device_code&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DeviceCodeResponse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;headers&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;content-type&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;application/x-www-form-urlencoded&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;payload&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;f&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;client_id={_APP_CLIENT_ID}&amp;amp;audience={_AUDIENCE}&amp;#34;&lt;/span&gt;
+
+    &lt;span class=&#34;n&#34;&gt;response&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;requests&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;post&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;f&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;{_TENANT}/oauth/device/code&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;headers&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;headers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;payload&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;response&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;raise_for_status&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+
+    &lt;span class=&#34;n&#34;&gt;device_code_info&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DeviceCodeResponse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;**&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;response&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;json&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;
+
+    &lt;span class=&#34;n&#34;&gt;_user_authorization_flow&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;device_code_info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;device_code_info&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;device_code_info&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;user-device-activation&#34;&gt;User device activation&lt;/h3&gt;
+&lt;p&gt;The &lt;code&gt;device code response&lt;/code&gt; includes different information for enabling the user to activate and to manage the CLI session,&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@dataclass&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;DeviceCodeResponse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;device_code&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;str&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;user_code&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;str&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;verification_uri&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;str&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;expires_in&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;int&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;interval&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;int&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;verification_uri_complete&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;str&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For this use case, the most relevant is the &lt;code&gt;user_code&lt;/code&gt; along with the &lt;code&gt;verification_uri&lt;/code&gt;, the user can copy&amp;amp;paste and go the
+URL or just directly open &lt;code&gt;verification_uri_complete&lt;/code&gt; in a browser to manually activate the CLI. For this step, the user
+needs to be logged in with the appropiate credentials, either a social login (google, github, etc) or a database connection.&lt;/p&gt;
+&lt;h3 id=&#34;request-access-token&#34;&gt;Request access token&lt;/h3&gt;
+&lt;p&gt;The CLI needs to request and to store the access token, meanwhile the user is manually validating the device, the CLI is making
+a polling to the token URL provided by the IdP on a defined interval.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;_request_access_token&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;code&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;str&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;headers&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;content-type&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;application/x-www-form-urlencoded&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;payload&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;f&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;grant_type=urn:ietf:params:oauth:grant-type:device_code&amp;amp;&amp;#34;&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;f&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;device_code={code}&amp;amp;client_id={_APP_CLIENT_ID}&amp;#34;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;response&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;requests&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;post&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;f&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;{_TENANT}/oauth/token&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;headers&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;headers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;payload&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;response&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;raise_for_status&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;response&lt;/span&gt;
+
+
+&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;poll_user_verification&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;code&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;str&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;interval_seconds&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ReceivedCredentials&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;|&lt;/span&gt; &lt;span class=&#34;bp&#34;&gt;None&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;time&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;sleep&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;interval_seconds&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;valid_response&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;bp&#34;&gt;False&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;while&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;valid_response&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;try&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;response&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;_request_access_token&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;code&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;valid_response&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;bp&#34;&gt;True&lt;/span&gt;
+
+            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ReceivedCredentials&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;**&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;response&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;json&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;except&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;requests&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;HTTPError&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;as&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;http_error&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;http_error&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;response&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;status_code&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;403&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+                &lt;span class=&#34;k&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Retrying device code credentials request&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+                &lt;span class=&#34;n&#34;&gt;time&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;sleep&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;interval_seconds&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;else&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+                &lt;span class=&#34;k&#34;&gt;raise&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;http_error&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the user has successfully authorised the CLI you get a 200 status code with the &lt;code&gt;access_token&lt;/code&gt; in the payload along with
+additional parameters depending on the API configuration.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@dataclass&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;ReceivedCredentials&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;access_token&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;str&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;expires_in&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;int&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;token_type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;str&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;call-you-api-with-the-credentials&#34;&gt;Call you API with the credentials&lt;/h3&gt;
+&lt;p&gt;The &lt;code&gt;access_token&lt;/code&gt;is a JWT (JSON Web Token) that follows the &lt;a href=&#34;https://datatracker.ietf.org/doc/html/rfc7519&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;RFC7519&lt;/a&gt;
+ and you
+can validate and verify for providing access to you APIs and resources. For that, you can call your API passing the access_token
+as a bearer token in the request header.&lt;/p&gt;
+&lt;h2 id=&#34;sumary&#34;&gt;Sumary&lt;/h2&gt;
+&lt;p&gt;The code above implementes a basic solution for SSO in you CLI, of course, there are different missing pieces like &lt;code&gt;refresh_tokens&lt;/code&gt;,
+managing access through &lt;code&gt;scopes&lt;/code&gt; or handling &lt;code&gt;profiles&lt;/code&gt; which could help to understand better how this work in a corporate
+environment.&lt;/p&gt;
+&lt;p&gt;For reference, if you want to follow up on the previous examples, all code snippets presents in this post are available at:
+&lt;a href=&#34;https://github.com/alexhermida/sample_sso_cli&#34;&gt;https://github.com/alexhermida/sample_sso_cli&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Cheers!&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Retrospective 2019-2020</title>
+      <link>https://alexhermida.dev/posts/retrospective-2019-2020/</link>
+      <pubDate>Wed, 02 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://alexhermida.dev/posts/retrospective-2019-2020/</guid>
+      <description>&lt;p&gt;Hello!&lt;/p&gt;
+&lt;p&gt;Usually, this is the typical post people write in December or in January. But for me, it has more sense to do it now, not only because everybody is hoping to come back to some &amp;ldquo;kind of&amp;rdquo; normality (ending the summer, new school-year&amp;hellip;) but also exactly one year ago I was starting a new adventure in Cambridge.&lt;/p&gt;
+&lt;p&gt;2018/2019 was a period of change, I ended a project of life, Initios, meanwhile, I&amp;rsquo;d been working in an awesome project, Taiga. Also learning, preparing interviews and looking for a new challenge after many years. That challenge appeared, and I flew to Cambridge on the 31st of August 2019.&lt;/p&gt;
+&lt;p&gt;I did in the past, and I still do, different retrospective activities as a team so I&amp;rsquo;ll give it a try for my personal scope 😁&lt;/p&gt;
+&lt;h2 id=&#34;what-went-well&#34;&gt;What went well?&lt;/h2&gt;
+&lt;p&gt;The Cambridge experience was remarkable, I&amp;rsquo;ve been there whole September, and after that, I went every month for 4 to 5 days until last February. Beautiful place, with incredible history and lovely people.&lt;/p&gt;
+&lt;p&gt;Healx values and culture, I found what I would expect, extremely overturned with the company goals, you can feel the aim of having an impact on people.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;m surrounded by scientist and expertise people, but everyone is willing to share and always open to your doubts and to explain it better.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Focus,&lt;/strong&gt; last but not least. I think we all underestimate the power of focus even if we know deeply how important it is, I did it all my life. One project, shared goals, shared responsibility, stability, no side-projects. It worth it.&lt;/p&gt;
+&lt;h2 id=&#34;what-didnt-go-so-well&#34;&gt;What didn’t go so well?&lt;/h2&gt;
+&lt;p&gt;I feel that in some areas, like the domain, my progress is too slow. I&amp;rsquo;m not aware of the best way of improving that, apart from participating more in the meetings and asking more questions. The reality is that I also want to deliver, learning technologies and the stack so it&amp;rsquo;s an extra thing not easy to improve without specific actions.&lt;/p&gt;
+&lt;p&gt;The company needs to scale &lt;em&gt;&lt;strong&gt;a lot&lt;/strong&gt;,&lt;/em&gt; some growth pain and not easy, nothing unexpected I think.&lt;/p&gt;
+&lt;p&gt;I guess COVID-19 it&amp;rsquo;s the big thing, it affected all of us in multiple and different ways and here in Spain, it wasn&amp;rsquo;t easy to cope with fifty days hard lockdown. Many things had changed last months and we still don&amp;rsquo;t know how the &amp;ldquo;new normality&amp;rdquo; will be.&lt;/p&gt;
+&lt;h2 id=&#34;what-have-i-learned&#34;&gt;What have I learned?&lt;/h2&gt;
+&lt;p&gt;I learned new technologies, like React, TypesScript and GraphQL and I&amp;rsquo;ve got used to functional programming paradigm.&lt;/p&gt;
+&lt;p&gt;I got into some new AWS tools. I had some experience working with EC2 and S3, but now I can say I feel somehow comfortable with things like ECS, Fargate, RDS or ELB.&lt;/p&gt;
+&lt;p&gt;I learn &lt;strong&gt;every&lt;/strong&gt; day about the domain, I would say I need 6 more lives to have enough understanding.&lt;/p&gt;
+&lt;p&gt;I learned there are other ways to manage a team, especially the well-being of it. I worked in different places and I&amp;rsquo;ve never felt so covered like in Healx.&lt;/p&gt;
+&lt;h2 id=&#34;what-still-puzzles-me&#34;&gt;What still puzzles me?&lt;/h2&gt;
+&lt;p&gt;My English; somehow I would expect my English would improve much more but that wasn&amp;rsquo;t the case. I&amp;rsquo;m aware my understanding and listening improved a lot but is not the case with my oral expression. Something to address and improve.&lt;/p&gt;
+&lt;p&gt;Still not comfortable with some of the stack, I&amp;rsquo;m willing to keep improving and focusing.&lt;/p&gt;
+&lt;h2 id=&#34;outcome&#34;&gt;Outcome&lt;/h2&gt;
+&lt;p&gt;That&amp;rsquo;s it, I think this is a good exercise, I came up with things I hadn&amp;rsquo;t realised!&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Improve my English speaking and vocabulary&lt;/li&gt;
+&lt;li&gt;Keep focus&lt;/li&gt;
+&lt;li&gt;Keep learning&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Probably, it&amp;rsquo;s time to get some actions from them. I guess I need a new post for my planning for 2020/2021 😏&lt;/p&gt;
+&lt;p&gt;Cheers!&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Quick overview for securing a backend API with Google App Engine and Auth0.</title>
+      <link>https://alexhermida.dev/posts/create-app-engine-service-authenticated-with-auth0/</link>
+      <pubDate>Sat, 06 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://alexhermida.dev/posts/create-app-engine-service-authenticated-with-auth0/</guid>
+      <description>&lt;p&gt;Google App Engine it&amp;rsquo;s a good product for quick API deployment and very easy to integrate with Auth0 for autentication.
+I&amp;rsquo;ll go through the basics concepts for deploying an API backend in Python.&lt;/p&gt;
+&lt;p&gt;Auth0 is a cloud authentication and authorisation service which solves for you the complexity of identity managament.&lt;/p&gt;
+&lt;p&gt;This overview is focus in giving some additional explantions or key points that may help you with your specific use case.
+It is complementary to what appears in the official &amp;ldquo;How-to&amp;rdquo; guides.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://cloud.google.com/endpoints/docs/openapi/authenticating-users-auth0&#34;&gt;https://cloud.google.com/endpoints/docs/openapi/authenticating-users-auth0&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://auth0.com/docs/integrations/google-cloud-platform&#34;&gt;https://auth0.com/docs/integrations/google-cloud-platform&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Prerequisites:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Create a Google Cloud project (&lt;a href=&#34;https://cloud.google.com/resource-manager/docs/creating-managing-projects&#34;&gt;https://cloud.google.com/resource-manager/docs/creating-managing-projects&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Enable billing for the project (&lt;a href=&#34;https://cloud.google.com/billing/docs/how-to/modify-project&#34;&gt;https://cloud.google.com/billing/docs/how-to/modify-project&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Some Google services enabled (&lt;a href=&#34;https://cloud.google.com/endpoints/docs/quickstart-endpoints#enabling_required_services&#34;&gt;https://cloud.google.com/endpoints/docs/quickstart-endpoints#enabling_required_services&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For this &lt;em&gt;overview&lt;/em&gt; will only be necessary to use two products from Google Cloud Platform (GCP): &lt;a href=&#34;https://cloud.google.com/appengine&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;App Engine&lt;/a&gt;
+
+and &lt;a href=&#34;https://cloud.google.com/endpoints&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Endpoints&lt;/a&gt;
+.&lt;/p&gt;
+&lt;p&gt;An important thing to take into account is the differences between a &lt;strong&gt;&lt;em&gt;flexible&lt;/em&gt;&lt;/strong&gt; and a &lt;strong&gt;&lt;em&gt;standard&lt;/em&gt;&lt;/strong&gt; environment in Google App Engine. I&amp;rsquo;ll be
+focus on enabling it for a &lt;em&gt;flexible&lt;/em&gt; environment. The  &lt;em&gt;Endpoints&lt;/em&gt; product for &lt;em&gt;Standard&lt;/em&gt; environment is still in Beta and it requires many
+additional configurations for making it work with Auth0.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Deploying backend API&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;You can deploy your API or application before the Endpoints configuration so you can test it without any authentication. There are
+many boilerplates from the &lt;a href=&#34;https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/appengine/flexible&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Google documantation&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;You could just create your basic sample with any framework like Flask, FastAPI or Django.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;main.py: entrypoint/executable&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;  &lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;fastapi&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;FastAPI&lt;/span&gt;
+
+  &lt;span class=&#34;n&#34;&gt;app&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;FastAPI&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+
+
+  &lt;span class=&#34;nd&#34;&gt;@app.get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/getText/{text}&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;get_text&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;text&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;str&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+          &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Text&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;text&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+
+  &lt;span class=&#34;nd&#34;&gt;@app.get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/notAuthenticated&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;not_authenticated&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;():&lt;/span&gt;
+      &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Endpoint without authentication&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+
+  &lt;span class=&#34;nd&#34;&gt;@app.get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;root&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;():&lt;/span&gt;
+      &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Root without authentication&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;requirements.txt: Requirements for your app. Take into account that GCloud uses only &lt;code&gt;requirements.txt&lt;/code&gt; file
+for the Python runtime. &lt;a href=&#34;https://cloud.google.com/appengine/docs/flexible/python/using-python-libraries#declaring_and_managing_dependencies&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Additional info&lt;/a&gt;
+&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-txt&#34; data-lang=&#34;txt&#34;&gt;  click==7.1.2
+  fastapi==0.55.1
+  gunicorn==20.0.4
+  h11==0.9.0
+  httptools==0.1.1
+  pydantic==1.5.1
+  starlette==0.13.2
+  uvicorn==0.11.5
+  uvloop==0.14.0
+  websockets==8.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;app.yml: It is your App Engine settings file for each service you deploy (&lt;a href=&#34;https://cloud.google.com/appengine/docs/standard/python3/config/appref&#34;&gt;https://cloud.google.com/appengine/docs/standard/python3/config/appref&lt;/a&gt;)&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;runtime&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;python&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;env&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;flex&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;runtime_config&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;python_version&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;entrypoint&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;gunicorn&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;-w&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;-k&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;uvicorn.workers.UvicornWorker&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;main&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;app&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;service&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;test-auth0&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;After you already tested the running API you can procced to the Endpoints configuration.&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;Deploy Cloud Endpoints configuration&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Cloud Enpoints uses ESP (Extensible Service Proxy) which allows to serve the API&amp;rsquo;s. We must deploy OpenAPI document to Service Management for configuring the endpoints.&lt;/p&gt;
+&lt;p&gt;OpenApi file for configuring the endpoints:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;openapi-appengine.yml&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;k&#34;&gt;swagger&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;2.0&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;title&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;Test&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;auth0&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;version&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1.0.0&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;host&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;{GCLOUD_PROJECT_ID}.appspot.com&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;consumes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;- &lt;span class=&#34;s2&#34;&gt;&amp;#34;application/json&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;produces&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;- &lt;span class=&#34;s2&#34;&gt;&amp;#34;application/json&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;schemes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;- &lt;span class=&#34;s2&#34;&gt;&amp;#34;http&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;- &lt;span class=&#34;s2&#34;&gt;&amp;#34;https&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;paths&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/getText/{text}&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;description&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Get text&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;operationId&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;getTextInUri&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;parameters&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;- &lt;span class=&#34;k&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;text&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;in&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;path&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;description&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;Get&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;text&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;required&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;string&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;responses&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;200&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;description&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Success.&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;schema&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;string&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;400&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;description&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Forbidden access&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;security&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;       &lt;/span&gt;- &lt;span class=&#34;k&#34;&gt;auth0_jwt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/notAuthenticated&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;     &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;       &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;description&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Not authenticated endpoint&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;       &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;operationId&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;notAuth&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;       &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;responses&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;200&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;description&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Success.&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;400&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;description&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Forbidden access&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;securityDefinitions&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;auth0_jwt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;authorizationUrl&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;https://{AUTH0_DOMAIN}/authorize&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;flow&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;implicit&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;oauth2&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;x-google-issuer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;https://{AUTH0_DOMAIN}/&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;x-google-jwks_uri&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;https://{AUTH0_DOMAIN}/.well-known/jwks.json&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;x-google-audiences&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;https://{AUTH0_API_ID}/&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The file includes two endpoints, only the &lt;code&gt;getText&lt;/code&gt; one is authenticated. Also, is worth mentioning that the root endpoint
+is not available in Google Endpoints. Check &lt;a href=&#34;https://cloud.google.com/endpoints/docs/openapi/openapi-limitations#operations_on_url_root_path_&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;limitations and unsupported features&lt;/a&gt;
+.&lt;/p&gt;
+&lt;p&gt;Deploy Endpoints service configuration:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;gcloud endpoints services deploy openapi-appengine.yml&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Additional info: &lt;a href=&#34;https://cloud.google.com/endpoints/docs/openapi/architecture-overview&#34;&gt;https://cloud.google.com/endpoints/docs/openapi/architecture-overview&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;You must add to your &lt;code&gt;app.yml&lt;/code&gt; the configuration for link your proyect to the Cloud Endpoints service configuration&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;k&#34;&gt;endpoints_api_service&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;{GCLOUD_PROJECT_ID}.appspot.com&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;rollout_strategy&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;managed&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can do any update to your OpenApi without the need of reloading the service.&lt;/p&gt;
+&lt;p&gt;I hope this help you!&lt;/p&gt;
+&lt;p&gt;Cheers.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Start over</title>
+      <link>https://alexhermida.dev/posts/first-post/</link>
+      <pubDate>Thu, 07 May 2020 20:34:11 +0200</pubDate>
+      
+      <guid>https://alexhermida.dev/posts/first-post/</guid>
+      <description>&lt;p&gt;Hello!&lt;/p&gt;
+&lt;p&gt;Today, I start over with a personal blog after years of silence. I guess never is late for doing it. I have said &lt;em&gt;start over&lt;/em&gt; because I had a blog in the past, but that&amp;rsquo;s another story.&lt;/p&gt;
+&lt;p&gt;My aim&amp;rsquo;s just to keep a personal reference for experiences and consolidate new knowledge while I share them with you. I&amp;rsquo;ll be talking mainly about tech and related stuff.&lt;/p&gt;
+&lt;p&gt;If you came from the future and you found here valuable content or my future me does, it&amp;rsquo;s more than enough.&lt;/p&gt;
+&lt;p&gt;Why do I write in English? Selfishly, to improve my communicating skills.&lt;/p&gt;
+&lt;p&gt;Cheers.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>Scaling PostgreSQL from a developer point of view.</title>
-      <link>/posts/developing-with-postgres/</link>
+      <link>https://alexhermida.dev/posts/developing-with-postgres/</link>
       <pubDate>Mon, 10 Jun 2019 00:00:00 +0000</pubDate>
       
-      <guid>/posts/developing-with-postgres/</guid>
-      <description>&lt;p&gt;As a developer, you have to deal with databases from time to time in your work-life, and if you are a web developer probably making queries, it is something you are facing daily.&lt;/p&gt;</description>
+      <guid>https://alexhermida.dev/posts/developing-with-postgres/</guid>
+      <description>&lt;p&gt;As a developer, you have to deal with databases from time to time in your work-life, and if you are a web developer probably making queries, it is something you are facing daily.&lt;/p&gt;
+&lt;p&gt;Since I&amp;rsquo;m not a database administrator nor a PostgreSQL expert I only want to give some small tips if you are dealing with scaling issues or starting with PostgreSQL and you want to know more about some underlying processes.&lt;/p&gt;
+&lt;p&gt;Things you must take into account when you add a query to your code:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Indexes&lt;/li&gt;
+&lt;li&gt;Explain (planner)&lt;/li&gt;
+&lt;li&gt;Vaccum&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;indexes&#34;&gt;Indexes&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;CREATE INDEX&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Probably this is one of the things that every developer take care of when is trying to improve a query or implementing some complex one. Regardless
+&lt;em&gt;indexes&lt;/em&gt; is one of the most important things in a query plan; it also can have counterparts.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;B-tree: Is the default option when you create an index and is recommended to handle equality, range queries using &lt;a href=&#34;https://www.postgresql.org/docs/current/functions-comparison.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;basic comparison&lt;/a&gt;
+. It also works well with sorted data.&lt;/li&gt;
+&lt;li&gt;Hash: It can only handle equality comparisons although they are &lt;a href=&#34;https://www.postgresql.org/docs/7.2/indexes-types.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;discouraged&lt;/a&gt;
+ because the need of reindexing in case of database crash and there is no probe of performance improvements with B-tree. Although PostgreSQL 10 is crash-safe.&lt;/li&gt;
+&lt;li&gt;GiST (Generalized Search Tree): Give us a complex system for implementing different strategies depending on the data types. Are good for geometric data types and full-text search. It has &lt;a href=&#34;https://www.postgresql.org/docs/current/gist-builtin-opclasses.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;built-in operator classes&lt;/a&gt;
+ although
+you can extend it.&lt;/li&gt;
+&lt;li&gt;SP-GiST (space-partitioned GiST): Similar to GiST s meat to allow the development of custom data types but supports partitioned search trees for use with unbalanced data structures.&lt;/li&gt;
+&lt;li&gt;GIN (Generalized Inverted Index): Are suitable for dealing with composite values like array values or JSONB.&lt;/li&gt;
+&lt;li&gt;BRIN (Block Range INdexes): For handling large datasets created sequentially. The index group adjacent datasets in the table with blocks. This type allows also to save a lot of disk space because it keeps an index entry for the block itself instead of the tuple.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;As you can see, some of the Indexes types, like GIN or GiST, are more worried about the knowledge of the data types rather than a database size or structure.&lt;/p&gt;
+&lt;p&gt;In general, the use of indexes is essential for excellent performance, and it is something that you have to take care of as a developer. To implement it, you must take into account:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Lookups performed&lt;/li&gt;
+&lt;li&gt;The data type&lt;/li&gt;
+&lt;li&gt;Underlying data within the table&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;With these three variables, you must decide what index you have to choose for improving your queries. How can you evaluate it in PostgreSQL? With &lt;code&gt;EXPLAIN&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;planner&#34;&gt;Planner&lt;/h2&gt;
+&lt;p&gt;Within the internal structure of PostgreSQL, you can find the &amp;ldquo;Planner&amp;rdquo;, which is in charge of looking for the best execution plan for a SQL query. In the &lt;a href=&#34;https://www.postgresql.org/docs/9.5/planner-optimizer.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;official documentation&lt;/a&gt;
+ there is much documentation regarding how the internals work. I only try to give some clues about how you can analyze a specific query.&lt;/p&gt;
+&lt;p&gt;After parsing the query, PostgreSQL will try to:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Generate different execution plans&lt;/li&gt;
+&lt;li&gt;Calculate the cost of each plan&lt;/li&gt;
+&lt;li&gt;Select the best one to execute the query&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Since you can&amp;rsquo;t guess your query behaviour &lt;em&gt;EXPLAIN&lt;/em&gt; will be your main tool.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;EXPLAIN&lt;/code&gt; help you to view how the planner interprets queries and determines the optimal execution. Combining it with options like &lt;em&gt;ANALYZE, COSTS, or VERBOSE&lt;/em&gt; gives you the plan chosen by the planner. When you execute &lt;em&gt;EXPLAIN&lt;/em&gt; you get some result like:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ EXPLAIN ANALYZE select * from test WHERE num=164;
+                                                      QUERY PLAN
+-----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..8325.47 rows=483 width=41) (actual time=10.448..260.448 rows=509 loops=1)
+   Workers Planned: 2
+   Workers Launched: 2
+   -&amp;gt;  Parallel Seq Scan on test  (cost=0.00..7277.17 rows=201 width=41) (actual time=5.214..236.655 rows=170 loops=3)
+         Filter: (num = 164)
+         Rows Removed by Filter: 166497
+ Planning time: 6.670 ms
+ Execution time: 263.254 ms
+(8 rows)
+
+Time: 327,272 ms
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Using the keyword &lt;em&gt;ANALYZE&lt;/em&gt; you will have more detail but take care because the query will be executed!. For detail understanding of it you can go to the PosgreSQL &lt;a href=&#34;https://www.postgresql.org/docs/9.5/using-explain.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;docs&lt;/a&gt;
+. I will only give some little advice about some key points.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Check the total cost and time. The upper-level node includes all children costs.&lt;/li&gt;
+&lt;li&gt;Review what indexes are being used in every particular node.&lt;/li&gt;
+&lt;li&gt;Review access methods for every node (Sequential Scan, Index Scan, Bitmap Heap Scan)&lt;/li&gt;
+&lt;li&gt;Like in any programming language nest matters quite a lot.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For analysis, you have some online tools:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://tatiyants.com/pev/&#34;&gt;https://tatiyants.com/pev/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://explain.depesz.com&#34;&gt;https://explain.depesz.com&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Or you can also use some local tool, even some IDE&amp;rsquo;s like PyCharm/Intellij has the feature of showing the query plan as a diagram.&lt;/p&gt;
+&lt;p&gt;You can find additional information at &lt;a href=&#34;https://www.postgresql.org/docs/current/indexes-types.html&#34;&gt;https://www.postgresql.org/docs/current/indexes-types.html&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;vaccum&#34;&gt;Vaccum&lt;/h2&gt;
+&lt;p&gt;Vaccum can be another key feature when you are scaling up. The Vaccum primary job is to reclaim storage space occupied by dead tuples so it can be available to be re-used by future data insertion within the same table.
+I think that the latest versions of PostgreSQL do a good job on this, and if you have the autovacuum active it works very well. Although you can tweak the configuration if it&amp;rsquo;s necessary, I would say if you are developer and not PostgreSQL expert, keep away of doing it.&lt;/p&gt;
+&lt;p&gt;Nevertheless, you always have the possibility of executing the process manually in specific cases. Vaccum can run in two different ways in PostgreSQL.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Plain Vaccum&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;When you run the &lt;code&gt;VACCUM&lt;/code&gt; statement, reclaimed storage space is not given back to the operating system rather they are just defragmented within the same page but there is no exclusive lock and can run in parallel with normal read and writing.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Full Vaccum&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;code&gt;VACCUM FULL&lt;/code&gt; return the disk space to the operating system but creates an exclusive lock on each table while it is being processed.&lt;/p&gt;
+&lt;p&gt;I hope these brief notes can give you a better understanding of what it&amp;rsquo;s behind the scenes.&lt;/p&gt;
+&lt;p&gt;Cheers!&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Python tools</title>
+      <link>https://alexhermida.dev/talks/20181108-python-tools/</link>
+      <pubDate>Tue, 20 Nov 2018 00:00:00 +0000</pubDate>
       
+      <guid>https://alexhermida.dev/talks/20181108-python-tools/</guid>
+      <description>&lt;p&gt;Small talk about useful tools written in Python at
+&lt;a href=&#34;https://meetup.com/es-ES/VigoJUG/events/255662689/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;VigoJUG&lt;/a&gt;
+ meetup in November 8, 2018.&lt;/p&gt;
+&lt;p&gt;Slides: &lt;a href=&#34;https://github.com/alexhermida/talks/tree/master/python-tools&#34;&gt;https://github.com/alexhermida/talks/tree/master/python-tools&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>This summer master the mosquittos</title>
+      <link>https://alexhermida.dev/talks/20170720-python-mqtt-broker/</link>
+      <pubDate>Thu, 20 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://alexhermida.dev/talks/20170720-python-mqtt-broker/</guid>
+      <description>&lt;p&gt;Lightning talk about &lt;a href=&#34;http://mosquitto.org&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;MQTT broker&lt;/a&gt;
+ and &lt;a href=&#34;https://github.com/eclipse/paho.mqtt.python&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Python Client&lt;/a&gt;
+.&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/Y-W9t8KWNz4&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+</description>
+    </item>
+    
+    <item>
+      <title>Artesanos del futuro</title>
+      <link>https://alexhermida.dev/talks/20170221-artesanos-del-futuro/</link>
+      <pubDate>Tue, 21 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://alexhermida.dev/talks/20170221-artesanos-del-futuro/</guid>
+      <description>&lt;p&gt;Charla realizada en el &lt;a href=&#34;https://www.meetup.com/es-ES/GDGVigo/events/237396475/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;High School Developers Parade Vigo 2017&lt;/a&gt;
+ evento organizado por
+el GDGVigo &lt;a href=&#34;https://www.meetup.com/es-ES/GDGVigo/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;GDGVigo&lt;/a&gt;
+.&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/-O7ZdnDQXUQ&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+</description>
+    </item>
+    
+    <item>
+      <title>Python special methods for muggles</title>
+      <link>https://alexhermida.dev/talks/20160317-python-special-methods/</link>
+      <pubDate>Thu, 17 Mar 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://alexhermida.dev/talks/20160317-python-special-methods/</guid>
+      <description>&lt;p&gt;Presentation about Python special methods for Python Vigo.&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/IY_6vY-M60Y&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>https://alexhermida.dev/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://alexhermida.dev/about/</guid>
+      <description>&lt;p&gt;Hello! I&amp;rsquo;m Álex, a Software Engineer from Spain.&lt;/p&gt;
+&lt;p&gt;Nowdays, I work helping to find new treatments for rare diseases at &lt;a href=&#34;https://healx.io&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Healx&lt;/a&gt;
+ an AI-driven company based in Cambridge. Previously, I worked in &lt;a href=&#34;https://taiga.io&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Taiga.io&lt;/a&gt;
+, I founded &lt;a href=&#34;https://web.archive.org/web/20180829101008/http://www.initios.com/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Initios&lt;/a&gt;
+, a software company, and co-founded &lt;a href=&#34;https://www.parkapp.com/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Parkapp&lt;/a&gt;
+, among other things.&lt;/p&gt;
+&lt;p&gt;I love Python language and the community around it, I had a broad experience in I.T projects, and I&amp;rsquo;m also a computer security enthusiast. I like to work as a team facilitator.&lt;/p&gt;
+&lt;p&gt;One of the most valuable thing for achieving goals is communication, so I am a &lt;a href=&#34;http://agilemanifesto.org/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Agile manifesto&lt;/a&gt;
+ fan:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&amp;ldquo;Individuals and interactions over processes and tools.&amp;rdquo;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;I love learning and improving my skills every day. I collaborate on local development groups inside &lt;a href=&#34;http://vigotech.org/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;VigoTech&lt;/a&gt;
+, an active member in &lt;a href=&#34;https://aindustriosa.org&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;A Industriosa&lt;/a&gt;
+ and I&amp;rsquo;m one of the organizers of &lt;a href=&#34;https://www.python-vigo.es/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Python Vigo&lt;/a&gt;
+ and &lt;a href=&#34;https://pyday2017.python-vigo.es/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;PyDay Galicia&lt;/a&gt;
+.&lt;/p&gt;
+</description>
     </item>
     
   </channel>

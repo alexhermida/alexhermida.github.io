@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en"><meta charset="utf-8"><meta name="generator" content="Hugo 0.70.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark"><title>Building a CLI with SSO&nbsp;&ndash;&nbsp;AHR</title><link rel="stylesheet" href="/css/core.min.28ec31f082578b057ea60a90bc116156f07768486bc1fa30d325617372cf971197415cee82f8cfb1415e313b5362dd24.css" integrity="sha384-KOwx8IJXiwV&#43;pgqQvBFhVvB3aEhrwfow0yVhc3LPlxGXQVzugvjPsUFeMTtTYt0k"><meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Building a CLI with SSO" /><body><section id="header">
+    <div class="header wrap"><span class="header left-side"><a class="site home" href="/"><span class="site name">AHR</span></a></span>
+        <span class="header right-side"><div class="nav wrap"><nav class="nav"><a class="nav item" href="/tags/">Tags</a><a class="nav item" href="/talks">Talks</a><a class="nav item" href="/about">About</a></nav></div></span></div></section><section id="content"><div class="article-container"><section class="article header">
+    <h1 class="article title">Building a CLI with SSO</h1><p class="article date">Tuesday, May 9, 2023</p></section><article class="article markdown-body"><p>👋 Let&rsquo;s talk about adding SSO to our CLIs, something really usefull for different reasons. Single Sign-On (SSO) it not only a common practice now a days in organisations but almost a must.</p>
+<p>Although it looks challenging for many people at first glance, nowadays the integration it has been simplied thanks to the different services that help to abstract you from the complexity of the different flows. When it comes to the benefits of using SSO, there are many but some very specific for CLI applications.</p>
+<ol>
+<li>Simplifies the authentication process. CLI applications usually run locally in the user computer which means they&rsquo;re probably already using SSO for other services with an active session.</li>
+<li>Allow users to take advantage of a central identity provider (IdP), that could be any of the frequent mainstream social providers like Google, Microsoft, Github or any other over OIDC or SAML protocols.</li>
+<li>Increases security as the user doesn&rsquo;t need to mantain long lived secret keys, tokens or credentials for authentication.</li>
+<li>Allow better integration within other systems and services in the organisation.</li>
+</ol>
+<p>those, among others, are some of the benefits but each use case it&rsquo;s different,
+so what does CLI session flow different?</p>
+<h2 id="some-context">Some context</h2>
+<p>Whereas in a regular application which lives in the cloud the authorisation flow is &ldquo;simpler&rdquo;, for a CLI application, where the source code lives in the user computer and you can&rsquo;t exchange a secret, a relatively new flow was defined within the <a href="https://datatracker.ietf.org/doc/html/rfc8628"target="_blank" rel="noopener noreferrer">OAuth 2.0</a>
+ protocol. The &ldquo;Device authorisation grant&rdquo;.</p>
+<p>This new grant define a secondary &ldquo;device&rdquo; apart from the client where the application is executed. The user manually grant access through that &ldquo;device&rdquo;.</p>
+<pre><code class="language-diagram" data-lang="diagram">      +----------+                                +----------------+
+      |          |&gt;---(A)-- Client Identifier ---&gt;|                |
+      |          |                                |                |
+      |          |&lt;---(B)-- Device Code,      ---&lt;|                |
+      |          |          User Code,            |                |
+      |  Device  |          &amp; Verification URI    |                |
+      |  Client  |                                |                |
+      |          |  [polling]                     |                |
+      |          |&gt;---(E)-- Device Code       ---&gt;|                |
+      |          |          &amp; Client Identifier   |                |
+      |          |                                |  Authorization |
+      |          |&lt;---(F)-- Access Token      ---&lt;|     Server     |
+      +----------+   (&amp; Optional Refresh Token)   |                |
+            v                                     |                |
+            :                                     |                |
+           (C) User Code &amp; Verification URI       |                |
+            :                                     |                |
+            v                                     |                |
+      +----------+                                |                |
+      | End User |                                |                |
+      |    at    |&lt;---(D)-- End user reviews  ---&gt;|                |
+      |  Browser |          authorization request |                |
+      +----------+                                +----------------+
+
+                    Figure 1: Device Authorization Flow
+</code></pre><h2 id="coding-time">Coding time</h2>
+<p>For learning purpose I created a new CLI tool with a minimum configuration, and
+for this specific example I used <strong>Auth0</strong> as the Identity Provider (IdP), but you can easily
+configure it for using with other providers like <strong>Okta, Amazon Cognito or others.</strong></p>
+<blockquote>
+<p>If you want to run and test it you&rsquo;d need at least the following requirements:</p>
+<ul>
+<li>to create you own <strong>Navite application</strong>
+in <a href="https://auth0.com/docs/get-started/auth0-overview/create-applications/native-apps"target="_blank" rel="noopener noreferrer">auth0</a>
+</li>
+<li>Enable social or a database connection</li>
+<li><a href="https://auth0.com/docs/get-started/architecture-scenarios/mobile-api/part-2#create-the-api"target="_blank" rel="noopener noreferrer">Register your API</a>
+</li>
+</ul>
+<p>With that, you&rsquo;d have the parameters needed for the OAuth flow, like client_id or audience.</p>
+</blockquote>
+<h3 id="request-device-code">Request device code</h3>
+<p>As described in the flow diagram, first step is to request a temporary device code that can be used for propmt the
+user for the device activation. For that, the IdP give us an endpoint where we can request that device code using
+the audience and client_id parameters.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">request_device_code</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">DeviceCodeResponse</span><span class="p">:</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;content-type&#34;</span><span class="p">:</span> <span class="s2">&#34;application/x-www-form-urlencoded&#34;</span><span class="p">}</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&#34;client_id={_APP_CLIENT_ID}&amp;audience={_AUDIENCE}&#34;</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+        <span class="n">f</span><span class="s2">&#34;{_TENANT}/oauth/device/code&#34;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">payload</span>
+    <span class="p">)</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+
+    <span class="n">device_code_info</span> <span class="o">=</span> <span class="n">DeviceCodeResponse</span><span class="p">(</span><span class="o">**</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+
+    <span class="n">_user_authorization_flow</span><span class="p">(</span><span class="n">device_code_info</span><span class="o">=</span><span class="n">device_code_info</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">device_code_info</span>
+
+</code></pre></div><h3 id="user-device-activation">User device activation</h3>
+<p>The <code>device code response</code> includes different information for enabling the user to activate and to manage the CLI session,</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">DeviceCodeResponse</span><span class="p">:</span>
+    <span class="n">device_code</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">user_code</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">verification_uri</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">expires_in</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">interval</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">verification_uri_complete</span><span class="p">:</span> <span class="nb">str</span>
+</code></pre></div><p>For this use case, the most relevant is the <code>user_code</code> along with the <code>verification_uri</code>, the user can copy&amp;paste and go the
+URL or just directly open <code>verification_uri_complete</code> in a browser to manually activate the CLI. For this step, the user
+needs to be logged in with the appropiate credentials, either a social login (google, github, etc) or a database connection.</p>
+<h3 id="request-access-token">Request access token</h3>
+<p>The CLI needs to request and to store the access token, meanwhile the user is manually validating the device, the CLI is making
+a polling to the token URL provided by the IdP on a defined interval.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">_request_access_token</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;content-type&#34;</span><span class="p">:</span> <span class="s2">&#34;application/x-www-form-urlencoded&#34;</span><span class="p">}</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">f</span><span class="s2">&#34;grant_type=urn:ietf:params:oauth:grant-type:device_code&amp;&#34;</span>
+        <span class="n">f</span><span class="s2">&#34;device_code={code}&amp;client_id={_APP_CLIENT_ID}&#34;</span>
+    <span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">f</span><span class="s2">&#34;{_TENANT}/oauth/token&#34;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">response</span>
+
+
+<span class="k">def</span> <span class="nf">poll_user_verification</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">interval_seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ReceivedCredentials</span> <span class="o">|</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">interval_seconds</span><span class="p">)</span>
+    <span class="n">valid_response</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">valid_response</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">_request_access_token</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+            <span class="n">valid_response</span> <span class="o">=</span> <span class="bp">True</span>
+
+            <span class="k">return</span> <span class="n">ReceivedCredentials</span><span class="p">(</span><span class="o">**</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">HTTPError</span> <span class="k">as</span> <span class="n">http_error</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">http_error</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">403</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s2">&#34;Retrying device code credentials request&#34;</span><span class="p">)</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">interval_seconds</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">http_error</span>
+
+</code></pre></div><p>Once the user has successfully authorised the CLI you get a 200 status code with the <code>access_token</code> in the payload along with
+additional parameters depending on the API configuration.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">ReceivedCredentials</span><span class="p">:</span>
+    <span class="n">access_token</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">expires_in</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">token_type</span><span class="p">:</span> <span class="nb">str</span>
+</code></pre></div><h3 id="call-you-api-with-the-credentials">Call you API with the credentials</h3>
+<p>The <code>access_token</code>is a JWT (JSON Web Token) that follows the <a href="https://datatracker.ietf.org/doc/html/rfc7519"target="_blank" rel="noopener noreferrer">RFC7519</a>
+ and you
+can validate and verify for providing access to you APIs and resources. For that, you can call your API passing the access_token
+as a bearer token in the request header.</p>
+<h2 id="sumary">Sumary</h2>
+<p>The code above implementes a basic solution for SSO in you CLI, of course, there are different missing pieces like <code>refresh_tokens</code>,
+managing access through <code>scopes</code> or handling <code>profiles</code> which could help to understand better how this work in a corporate
+environment.</p>
+<p>For reference, if you want to follow up on the previous examples, all code snippets presents in this post are available at:
+<a href="https://github.com/alexhermida/sample_sso_cli">https://github.com/alexhermida/sample_sso_cli</a></p>
+<p>Cheers!</p></article><section class="article labels"><a class="category" href=/categories/development/>development</a><a class="tag" href=/tags/python/>python</a><a class="tag" href=/tags/auth0/>auth0</a></section><section class="article author"><div class="details"><a class="item" href="https://github.com/alexhermida" target="_blank" rel="noopener noreferrer"><span class="iconfont icon-github"></span>&nbsp;alexhermida</a><a class="item" href="https://twitter.com/alexhermida" target="_blank" rel="noopener noreferrer"><span class="iconfont icon-twitter"></span>&nbsp;@alexhermida</a></div>
+</section>
+</div>
+<div class="article bottom"><section class="article navigation"><p><a class="link" href="/posts/retrospective-2019-2020/"><span class="iconfont icon-article"></span>Retrospective 2019-2020</a></p></section></div></section><section id="footer"><div class="footer-wrap">
+    <p class="copyright">2020 - @alexhermida</p>
+    <p class="powerby"><span>Powered&nbsp;by&nbsp;</span><a href="https://gohugo.io" 
+        target="_blank" rel="noopener noreferrer">Hugo</a><span>&nbsp;&amp;&nbsp;</span><a href="https://themes.gohugo.io/hugo-notepadium/" 
+        target="_blank" rel="noopener noreferrer">Notepadium</a></p></div>
+</section>
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-34397297-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+</body>
+
+</html>
