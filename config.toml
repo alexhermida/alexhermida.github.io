@@ -1,18 +1,12 @@
 baseURL = "https://alexhermida.dev"
 title = "AHR"
 theme = "hugo-notepadium"
-copyright = "2020 - @alexhermida"
+copyright = "2020 - 2026 @alexhermida"
 
-languageCode = "en-en"
-hasCJKLanguage = true
+locale = "en"
+hasCJKLanguage = false
 
 enableRobotsTXT = true
-
-# Enable Disqus
-#disqusShortname = "XXX"
-
-# Google Analytics
-googleAnalytics = "UA-34397297-1"
 
 [markup.highlight]
 codeFences = true
@@ -30,9 +24,6 @@ license = ""  # CC License
 fullRss = false # Puts entire HTML post into rss 'description' tag. If unset, default is false.
 mainSections = ["posts"]
 
-[params.comments]
-enable = false  # En/Disable comments globally, default: false. You can always enable comments on per page.
-
 [params.math]
 enable = false  # optional: true, false. Enable globally, default: false. You can always enable math on per page.
 use = "katex"  # option: "katex", "mathjax". default: "katex"
@@ -41,11 +32,6 @@ use = "katex"  # option: "katex", "mathjax". default: "katex"
 use = "none"  # builtin: "prismjs", "hljs". "none" means Chroma
 theme = "xcode"
 darkTheme = "xcode-dark"  # apply this theme in dark mode
-
-[params.share]
-enable = false
-addThisId = ""
-inlineToolId = ""
 
 [params.nav]
 showCategories = false       # /categories/
