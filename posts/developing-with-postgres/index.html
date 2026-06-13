@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en"><meta charset="utf-8"><meta name="generator" content="Hugo 0.161.1"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<html lang="en"><meta charset="utf-8"><meta name="generator" content="Hugo 0.70.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<meta name="supported-color-schemes" content="light dark"><meta name="description" content="As a developer, you have to deal with databases from time to time in your work-life, and if you are a web developer probably making queries, it is something you are facing daily."><title>Scaling PostgreSQL from a developer point of view.&nbsp;&ndash;&nbsp;AHR</title><link rel="stylesheet" href="/css/core.min.7d3384298b257eff2f84ff7d48ac8cd76c2fa0934b90672393d7368ca3ea117b1e18c7a4e0fa643a0c235a1b935b34ba.css" integrity="sha384-fTOEKYslfv8vhP99SKyM12wvoJNLkGcjk9c2jKPqEXseGMek4PpkOgwjWhuTWzS6"><meta name="twitter:card" content="summary" />
+<meta name="supported-color-schemes" content="light dark"><title>Scaling PostgreSQL from a developer point of view.&nbsp;&ndash;&nbsp;AHR</title><link rel="stylesheet" href="/css/core.min.28ec31f082578b057ea60a90bc116156f07768486bc1fa30d325617372cf971197415cee82f8cfb1415e313b5362dd24.css" integrity="sha384-KOwx8IJXiwV&#43;pgqQvBFhVvB3aEhrwfow0yVhc3LPlxGXQVzugvjPsUFeMTtTYt0k"><meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Scaling PostgreSQL from a developer point of view." /><meta name="twitter:image" content="https://alexhermida.dev/posts/developing-with-postgres//img/postgresql-horizontal.svg" /><body><section id="header">
     <div class="header wrap"><span class="header left-side"><a class="site home" href="/"><span class="site name">AHR</span></a></span>
         <span class="header right-side"><div class="nav wrap"><nav class="nav"><a class="nav item" href="/tags/">Tags</a><a class="nav item" href="/talks">Talks</a><a class="nav item" href="/about">About</a></nav></div></span></div></section><section id="content"><div class="article-container"><section class="article header">
-    <h1 class="article title">Scaling PostgreSQL from a developer point of view.</h1><p class="article date">Monday, June 10, 2019</p></section><article class="article markdown-body"><p><img alt="" loading="lazy" class="cover" src="/img/postgresql-horizontal.svg"/></p><p>As a developer, you have to deal with databases from time to time in your work-life, and if you are a web developer probably making queries, it is something you are facing daily.</p>
+    <h1 class="article title">Scaling PostgreSQL from a developer point of view.</h1><p class="article date">Monday, June 10, 2019</p></section><article class="article markdown-body"><p><img class="cover" src="/img/postgresql-horizontal.svg" alt></p><p>As a developer, you have to deal with databases from time to time in your work-life, and if you are a web developer probably making queries, it is something you are facing daily.</p>
 <p>Since I&rsquo;m not a database administrator nor a PostgreSQL expert I only want to give some small tips if you are dealing with scaling issues or starting with PostgreSQL and you want to know more about some underlying processes.</p>
 <p>Things you must take into account when you add a query to your code:</p>
 <ul>
@@ -18,9 +18,12 @@
 <p>Probably this is one of the things that every developer take care of when is trying to improve a query or implementing some complex one. Regardless
 <em>indexes</em> is one of the most important things in a query plan; it also can have counterparts.</p>
 <ul>
-<li>B-tree: Is the default option when you create an index and is recommended to handle equality, range queries using <a href="https://www.postgresql.org/docs/current/functions-comparison.html"target="_blank" rel="noopener noreferrer">basic comparison</a>. It also works well with sorted data.</li>
-<li>Hash: It can only handle equality comparisons although they are <a href="https://www.postgresql.org/docs/7.2/indexes-types.html"target="_blank" rel="noopener noreferrer">discouraged</a> because the need of reindexing in case of database crash and there is no probe of performance improvements with B-tree. Although PostgreSQL 10 is crash-safe.</li>
-<li>GiST (Generalized Search Tree): Give us a complex system for implementing different strategies depending on the data types. Are good for geometric data types and full-text search. It has <a href="https://www.postgresql.org/docs/current/gist-builtin-opclasses.html"target="_blank" rel="noopener noreferrer">built-in operator classes</a> although
+<li>B-tree: Is the default option when you create an index and is recommended to handle equality, range queries using <a href="https://www.postgresql.org/docs/current/functions-comparison.html"target="_blank" rel="noopener noreferrer">basic comparison</a>
+. It also works well with sorted data.</li>
+<li>Hash: It can only handle equality comparisons although they are <a href="https://www.postgresql.org/docs/7.2/indexes-types.html"target="_blank" rel="noopener noreferrer">discouraged</a>
+ because the need of reindexing in case of database crash and there is no probe of performance improvements with B-tree. Although PostgreSQL 10 is crash-safe.</li>
+<li>GiST (Generalized Search Tree): Give us a complex system for implementing different strategies depending on the data types. Are good for geometric data types and full-text search. It has <a href="https://www.postgresql.org/docs/current/gist-builtin-opclasses.html"target="_blank" rel="noopener noreferrer">built-in operator classes</a>
+ although
 you can extend it.</li>
 <li>SP-GiST (space-partitioned GiST): Similar to GiST s meat to allow the development of custom data types but supports partitioned search trees for use with unbalanced data structures.</li>
 <li>GIN (Generalized Inverted Index): Are suitable for dealing with composite values like array values or JSONB.</li>
@@ -35,7 +38,8 @@ you can extend it.</li>
 </ul>
 <p>With these three variables, you must decide what index you have to choose for improving your queries. How can you evaluate it in PostgreSQL? With <code>EXPLAIN</code>.</p>
 <h2 id="planner">Planner</h2>
-<p>Within the internal structure of PostgreSQL, you can find the &ldquo;Planner&rdquo;, which is in charge of looking for the best execution plan for a SQL query. In the <a href="https://www.postgresql.org/docs/9.5/planner-optimizer.html"target="_blank" rel="noopener noreferrer">official documentation</a> there is much documentation regarding how the internals work. I only try to give some clues about how you can analyze a specific query.</p>
+<p>Within the internal structure of PostgreSQL, you can find the &ldquo;Planner&rdquo;, which is in charge of looking for the best execution plan for a SQL query. In the <a href="https://www.postgresql.org/docs/9.5/planner-optimizer.html"target="_blank" rel="noopener noreferrer">official documentation</a>
+ there is much documentation regarding how the internals work. I only try to give some clues about how you can analyze a specific query.</p>
 <p>After parsing the query, PostgreSQL will try to:</p>
 <ol>
 <li>Generate different execution plans</li>
@@ -44,7 +48,7 @@ you can extend it.</li>
 </ol>
 <p>Since you can&rsquo;t guess your query behaviour <em>EXPLAIN</em> will be your main tool.</p>
 <p><code>EXPLAIN</code> help you to view how the planner interprets queries and determines the optimal execution. Combining it with options like <em>ANALYZE, COSTS, or VERBOSE</em> gives you the plan chosen by the planner. When you execute <em>EXPLAIN</em> you get some result like:</p>
-<pre tabindex="0"><code>$ EXPLAIN ANALYZE select * from test WHERE num=164;
+<pre><code>$ EXPLAIN ANALYZE select * from test WHERE num=164;
                                                       QUERY PLAN
 -----------------------------------------------------------------------------------------------------------------------
  Gather  (cost=1000.00..8325.47 rows=483 width=41) (actual time=10.448..260.448 rows=509 loops=1)
@@ -58,7 +62,9 @@ you can extend it.</li>
 (8 rows)
 
 Time: 327,272 ms
-</code></pre><p>Using the keyword <em>ANALYZE</em> you will have more detail but take care because the query will be executed!. For detail understanding of it you can go to the PosgreSQL <a href="https://www.postgresql.org/docs/9.5/using-explain.html"target="_blank" rel="noopener noreferrer">docs</a>. I will only give some little advice about some key points.</p>
+
+</code></pre><p>Using the keyword <em>ANALYZE</em> you will have more detail but take care because the query will be executed!. For detail understanding of it you can go to the PosgreSQL <a href="https://www.postgresql.org/docs/9.5/using-explain.html"target="_blank" rel="noopener noreferrer">docs</a>
+. I will only give some little advice about some key points.</p>
 <ul>
 <li>Check the total cost and time. The upper-level node includes all children costs.</li>
 <li>Review what indexes are being used in every particular node.</li>
@@ -67,11 +73,11 @@ Time: 327,272 ms
 </ul>
 <p>For analysis, you have some online tools:</p>
 <ul>
-<li><a href="https://tatiyants.com/pev/"target="_blank" rel="noopener noreferrer">https://tatiyants.com/pev/</a></li>
-<li><a href="https://explain.depesz.com"target="_blank" rel="noopener noreferrer">https://explain.depesz.com</a></li>
+<li><a href="https://tatiyants.com/pev/">https://tatiyants.com/pev/</a></li>
+<li><a href="https://explain.depesz.com">https://explain.depesz.com</a></li>
 </ul>
 <p>Or you can also use some local tool, even some IDE&rsquo;s like PyCharm/Intellij has the feature of showing the query plan as a diagram.</p>
-<p>You can find additional information at <a href="https://www.postgresql.org/docs/current/indexes-types.html"target="_blank" rel="noopener noreferrer">https://www.postgresql.org/docs/current/indexes-types.html</a></p>
+<p>You can find additional information at <a href="https://www.postgresql.org/docs/current/indexes-types.html">https://www.postgresql.org/docs/current/indexes-types.html</a></p>
 <h2 id="vaccum">Vaccum</h2>
 <p>Vaccum can be another key feature when you are scaling up. The Vaccum primary job is to reclaim storage space occupied by dead tuples so it can be available to be re-used by future data insertion within the same table.
 I think that the latest versions of PostgreSQL do a good job on this, and if you have the autovacuum active it works very well. Although you can tweak the configuration if it&rsquo;s necessary, I would say if you are developer and not PostgreSQL expert, keep away of doing it.</p>
@@ -89,9 +95,21 @@ I think that the latest versions of PostgreSQL do a good job on this, and if you
 </section>
 </div>
 <div class="article bottom"><section class="article navigation"><p><a class="link" href="/posts/first-post/"><span class="iconfont icon-article"></span>Start over</a></p></section></div></section><section id="footer"><div class="footer-wrap">
-    <p class="copyright">2020 - 2026 @alexhermida</p>
+    <p class="copyright">2020 - @alexhermida</p>
     <p class="powerby"><span>Powered&nbsp;by&nbsp;</span><a href="https://gohugo.io" 
         target="_blank" rel="noopener noreferrer">Hugo</a><span>&nbsp;&amp;&nbsp;</span><a href="https://themes.gohugo.io/hugo-notepadium/" 
-        target="_blank" rel="noopener noreferrer">Notepadium</a></p></div></section></body>
+        target="_blank" rel="noopener noreferrer">Notepadium</a></p></div>
+</section>
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-34397297-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+</body>
 
 </html>
