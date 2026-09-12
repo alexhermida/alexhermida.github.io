@@ -1,0 +1,86 @@
+{{- define "main" }}
+
+<article class="post-single talk-single">
+  <header class="post-header">
+    {{ partial "breadcrumbs.html" . }}
+    <h1 class="post-title entry-hint-parent">
+      {{ .Title }}
+      {{- if .Draft }}
+      <span class="entry-hint" title="Draft">
+        <svg xmlns="http://www.w3.org/2000/svg" height="35" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true">
+          <path d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Z" />
+        </svg>
+      </span>
+      {{- end }}
+    </h1>
+    {{- with .Description }}
+    <div class="post-description">{{ . }}</div>
+    {{- end }}
+  </header>
+
+  <section class="talk-details" aria-labelledby="talk-details-title">
+    <h2 id="talk-details-title">Talk details</h2>
+    <dl>
+      {{- with .Params.event }}
+      <div>
+        <dt>Event</dt>
+        <dd>
+          {{- with $.Params.event_url }}<a href="{{ . }}" rel="external">{{ end -}}
+          {{- $.Params.event -}}
+          {{- with $.Params.event_url }}</a>{{ end -}}
+        </dd>
+      </div>
+      {{- end }}
+      <div>
+        <dt>Date</dt>
+        <dd><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time></dd>
+      </div>
+      {{- with .Params.time_start }}
+      <div>
+        <dt>Time</dt>
+        <dd>
+          <time datetime="{{ (time.AsTime .).Format "15:04:05Z07:00" }}">{{ (time.AsTime .).Format "15:04" }}</time>
+          {{- with $.Params.time_end }}–<time datetime="{{ (time.AsTime .).Format "15:04:05Z07:00" }}">{{ (time.AsTime .).Format "15:04" }}</time>{{ end -}}
+        </dd>
+      </div>
+      {{- end }}
+      {{- with .Params.location }}
+      <div>
+        <dt>Location</dt>
+        <dd>{{ . }}</dd>
+      </div>
+      {{- end }}
+    </dl>
+
+    {{- if or .Params.url_slides .Params.url_video .Params.url_code .Params.url_pdf }}
+    <nav class="talk-resources" aria-label="Talk resources">
+      {{- with .Params.url_slides }}<a href="{{ . }}" rel="external">Slides</a>{{ end }}
+      {{- with .Params.url_video }}<a href="{{ . }}" rel="external">Video</a>{{ end }}
+      {{- with .Params.url_code }}<a href="{{ . }}" rel="external">Code</a>{{ end }}
+      {{- with .Params.url_pdf }}<a href="{{ . }}" rel="external">PDF</a>{{ end }}
+    </nav>
+    {{- end }}
+  </section>
+
+  {{- if .Content }}
+  <div class="post-content md-content">
+    {{- if not (.Param "disableAnchoredHeadings") }}
+    {{- partial "anchored_headings.html" .Content -}}
+    {{- else }}{{ .Content }}{{ end }}
+  </div>
+  {{- end }}
+
+  <footer class="post-footer">
+    {{- $tags := .Language.Params.Taxonomies.tag | default "tags" }}
+    <ul class="post-tags">
+      {{- range ($.GetTerms $tags) }}
+      <li><a href="{{ .Permalink }}">{{ .LinkTitle }}</a></li>
+      {{- end }}
+    </ul>
+    {{- if (.Param "ShowPostNavLinks") }}
+    {{- partial "post_nav_links.html" . }}
+    {{- end }}
+  </footer>
+</article>
+
+{{- end }}
