@@ -22,15 +22,35 @@ Run the development server:
 hugo server -D
 ```
 
-## Production build
+## Validate changes locally
 
-Build the production site locally:
+Work on a branch created from an up-to-date `main`:
+
+```bash
+git switch main
+git pull --ff-only
+git switch -c <type>/<change-name>
+```
+
+Preview drafts and changes locally:
+
+```bash
+hugo server -D
+```
+
+Before committing, run the same validation used by CI:
+
+```bash
+scripts/check-site.sh
+```
+
+The check requires Hugo Extended `0.166.0`, builds into a temporary directory, verifies critical pages and assets, and rejects accidental `/blog/` deployment paths.
+
+To retain a production build in `public/`, run:
 
 ```bash
 hugo --minify --gc
 ```
-
-The generated site is written to `public/`.
 
 ## Updating PaperMod
 
@@ -45,6 +65,6 @@ git commit -m "Update PaperMod"
 
 ## Deployment
 
-Pushes to `main` are built and deployed to GitHub Pages using GitHub Actions. Pull requests build the site without deploying it.
+Open a pull request from the working branch into `main`. Pull requests run the complete site validation without deploying. Only a merge or direct push to `main` builds and deploys the GitHub Pages artifact.
 
 The production site is published at [alexhermida.dev](https://alexhermida.dev).
