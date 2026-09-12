@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: read
+  pages: write
 
 concurrency:
   group: pages
@@ -36,6 +37,8 @@ jobs:
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Build
         run: hugo --minify --gc
