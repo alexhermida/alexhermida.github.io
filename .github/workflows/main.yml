@@ -1,34 +1,62 @@
-name: CI
+name: Build and deploy
+
 on:
   push:
+    branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Git checkout
+      - name: Checkout
         uses: actions/checkout@v4
         with:
-          submodules: true  # Fetch themes
+          submodules: recursive
+          fetch-depth: 0
 
-      - name: Setup hugo
-        uses: peaceiris/actions-hugo@v3.2.1
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
         with:
-          hugo-version: "0.161.1"
+          hugo-version: "0.166.0"
           extended: true
 
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
       - name: Build
-        # remove --minify tag if you do not need it
-        # docs: https://gohugo.io/hugo-pipes/minification/
-        run: hugo
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v4.1.0
+        run: hugo --minify --gc
+
+      - name: Upload artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
         with:
-          personal_token: ${{ secrets.TOKEN }}
-          external_repository: alexhermida/alexhermida.github.io
-          publish_dir: ./public
-          keep_files: true
-          user_name: "Álex Hermida"
-          user_email: alexhermida@gmail.com
-          publish_branch: master
-          cname: alexhermida.dev
+          path: ./public
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
