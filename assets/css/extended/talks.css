@@ -1,0 +1,81 @@
+.talk-details {
+    margin: 0 0 var(--content-gap);
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--entry);
+}
+
+.talk-details h2 {
+    margin: 0 0 1rem;
+    font-size: 1.25rem;
+}
+
+.talk-details dl {
+    display: grid;
+    gap: 0.65rem;
+    margin: 0;
+}
+
+.talk-details dl div {
+    display: grid;
+    grid-template-columns: minmax(5rem, 7rem) 1fr;
+    gap: 1rem;
+}
+
+.talk-details dt {
+    color: var(--secondary);
+    font-weight: 600;
+}
+
+.talk-details dd {
+    margin: 0;
+}
+
+.talk-details a {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 0.25rem;
+}
+
+.talk-resources {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-top: 1.25rem;
+}
+
+.talk-resources a {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    padding: 0 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--code-bg);
+    color: var(--primary);
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.talk-resources a:hover {
+    background: var(--border);
+}
+
+.talk-resources a:focus-visible,
+.talk-details dd a:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+    .talk-details dl div {
+        grid-template-columns: 1fr;
+        gap: 0.15rem;
+    }
+
+    .talk-resources a {
+        flex: 1 1 auto;
+        justify-content: center;
+    }
+}

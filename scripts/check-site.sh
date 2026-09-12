@@ -23,6 +23,10 @@ required_files=(
   about/index.html
   posts/index.html
   talks/index.html
+  talks/20160317-python-special-methods/index.html
+  talks/20170221-artesanos-del-futuro/index.html
+  talks/20170720-python-mqtt-broker/index.html
+  talks/20181108-python-tools/index.html
   tags/index.html
   categories/index.html
   index.xml
@@ -61,6 +65,13 @@ if [[ -z "$stylesheet" || ! -s "$BUILD_DIR/$stylesheet" ]]; then
   echo "error: home page stylesheet was not generated: ${stylesheet:-<not found>}" >&2
   exit 1
 fi
+
+for talk in "$BUILD_DIR"/talks/20*/index.html; do
+  if ! grep -q 'class=talk-details' "$talk"; then
+    echo "error: talk details are missing from ${talk#"$BUILD_DIR/"}" >&2
+    exit 1
+  fi
+done
 
 if [[ $(<"$BUILD_DIR/CNAME") != "alexhermida.dev" ]]; then
   echo "error: generated CNAME is not alexhermida.dev" >&2
