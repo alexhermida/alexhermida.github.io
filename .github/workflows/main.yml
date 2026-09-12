@@ -9,7 +9,6 @@ on:
 
 permissions:
   contents: read
-  pages: write
 
 concurrency:
   group: pages
@@ -35,12 +34,11 @@ jobs:
           hugo-version: "0.166.0"
           extended: true
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
+      - name: Validate site
+        run: scripts/check-site.sh
 
-      - name: Build
+      - name: Build deployment artifact
+        if: github.event_name != 'pull_request'
         run: hugo --minify --gc
 
       - name: Upload artifact
