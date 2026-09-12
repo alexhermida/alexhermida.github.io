@@ -29,6 +29,12 @@ required_files=(
   sitemap.xml
   robots.txt
   404.html
+  favicon.svg
+  favicon.ico
+  favicon-16x16.png
+  favicon-32x32.png
+  apple-touch-icon.png
+  safari-pinned-tab.svg
   CNAME
 )
 
