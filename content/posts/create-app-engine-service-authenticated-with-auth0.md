@@ -2,6 +2,7 @@
 title = "Quick overview for securing a backend API with Google App Engine and Auth0."
 [cover]
 image = "/img/appengine-auth0.png"
+alt = "Google App Engine and Auth0 integration overview"
 date = 2020-06-06
 draft = false
 

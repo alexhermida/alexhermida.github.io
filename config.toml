@@ -1,7 +1,7 @@
 baseURL = "https://alexhermida.dev/"
 title = "AHR"
 theme = "PaperMod"
-copyright = "© 2026 Álex Hermida"
+env = "production"
 
 defaultContentLanguage = "en"
 locale = "en"
@@ -17,6 +17,9 @@ noClasses = false
 unsafe = true
 
 [params]
+author = "Álex Hermida"
+description = "Álex Hermida's personal blog about software engineering and technology."
+DateFormat = "January 2, 2006"
 defaultTheme = "auto"
 disableThemeToggle = false
 mainSections = ["posts"]

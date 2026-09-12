@@ -2,6 +2,7 @@
 title = "Scaling PostgreSQL from a developer point of view."
 [cover]
 image = "/img/postgresql-horizontal.svg"
+alt = "PostgreSQL logo"
 date = 2019-06-10
 draft = false
 
