@@ -1,6 +1,5 @@
 +++
 title = "Building a CLI with SSO"
-cover = ""
 date = 2023-05-09
 draft = false
 

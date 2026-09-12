@@ -1,8 +1,9 @@
-baseURL = "https://alexhermida.dev"
+baseURL = "https://alexhermida.dev/"
 title = "AHR"
-theme = "hugo-notepadium"
-copyright = "2020 - 2026 @alexhermida"
+theme = "PaperMod"
+copyright = "© 2026 Álex Hermida"
 
+defaultContentLanguage = "en"
 locale = "en"
 hasCJKLanguage = false
 
@@ -13,41 +14,53 @@ codeFences = true
 noClasses = false
 
 [markup.goldmark.renderer]
-unsafe = true  # enable raw HTML in Markdown
+unsafe = true
 
 [params]
-style = "auto"  # default: auto. light: light theme, dark: dark theme, auto: based on system.
-dateFormat = "Monday, January 2, 2006"  # if unset, default is "2006-01-02"
-logo = ""  # if you have a logo png
-slogan = ""
-license = ""  # CC License
-fullRss = false # Puts entire HTML post into rss 'description' tag. If unset, default is false.
+defaultTheme = "auto"
+disableThemeToggle = false
 mainSections = ["posts"]
+ShowReadingTime = true
+ShowCodeCopyButtons = true
+ShowPostNavLinks = true
+ShowBreadCrumbs = false
+ShowToc = false
+ShowShareButtons = false
+ShowRssButtonInSectionTermList = true
 
-[params.math]
-enable = false  # optional: true, false. Enable globally, default: false. You can always enable math on per page.
-use = "katex"  # option: "katex", "mathjax". default: "katex"
+[params.homeInfoParams]
+Title = "Hi, I'm Álex 👋"
+Content = "Software engineer writing about technology and related topics."
 
-[params.syntax]
-use = "none"  # builtin: "prismjs", "hljs". "none" means Chroma
-theme = "xcode"
-darkTheme = "xcode-dark"  # apply this theme in dark mode
+[[params.socialIcons]]
+name = "github"
+url = "https://github.com/alexhermida"
 
-[params.nav]
-showCategories = false       # /categories/
-showTags = true             # /tags/
+[[params.socialIcons]]
+name = "bluesky"
+url = "https://bsky.app/profile/alexhermida.dev"
 
-# custom navigation items
+[[params.socialIcons]]
+name = "linkedin"
+url = "https://www.linkedin.com/in/alexhermida/"
 
-[[params.nav.custom]]
-title = "Talks"
-url = "/talks"
+[menu]
+[[menu.main]]
+name = "Posts"
+url = "/posts/"
+weight = 10
 
-[[params.nav.custom]]
-title = "About"
-url = "/about"
+[[menu.main]]
+name = "Talks"
+url = "/talks/"
+weight = 20
 
-[params.profile]
-  enable = true
-  twitter = "alexhermida"
-  github = "alexhermida"
+[[menu.main]]
+name = "About"
+url = "/about/"
+weight = 30
+
+[[menu.main]]
+name = "Tags"
+url = "/tags/"
+weight = 40

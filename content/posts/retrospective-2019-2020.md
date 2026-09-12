@@ -1,6 +1,5 @@
 +++
 title = "Retrospective 2019-2020"
-cover = ""
 date = 2020-09-02
 draft = false
 

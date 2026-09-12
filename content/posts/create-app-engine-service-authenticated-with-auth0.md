@@ -1,6 +1,7 @@
 +++
 title = "Quick overview for securing a backend API with Google App Engine and Auth0."
-cover = "/img/appengine-auth0.png"
+[cover]
+image = "/img/appengine-auth0.png"
 date = 2020-06-06
 draft = false
 
