@@ -12,7 +12,7 @@ Personal blog built with [Hugo](https://gohugo.io/) and [PaperMod](https://githu
 Clone the repository including the theme:
 
 ```bash
-git clone --recurse-submodules git@github.com:alexhermida/blog.git
+git clone --recurse-submodules git@github.com:alexhermida/alexhermida.github.io.git
 cd blog
 ```
 
