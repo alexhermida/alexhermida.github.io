@@ -1,5 +1,5 @@
 baseURL = "https://alexhermida.dev/"
-title = "AHR"
+title = "Álex Hermida"
 theme = "PaperMod"
 env = "production"
 
@@ -18,7 +18,7 @@ unsafe = true
 
 [params]
 author = "Álex Hermida"
-description = "Álex Hermida's personal blog about software engineering and technology."
+description = "Álex Hermida's personal site about software engineering, AI systems, agents, Python, and building reliable production software."
 DateFormat = "January 2, 2006"
 defaultTheme = "auto"
 disableThemeToggle = false
@@ -42,7 +42,7 @@ msapplication_TileColor = "#1d1e20"
 
 [params.homeInfoParams]
 Title = "Hi, I'm Álex 👋"
-Content = "Software engineer writing about technology and related topics."
+Content = "I'm a Principal Software Engineer working across software, data, and AI. I write about building reliable systems, AI agents, Python, and the engineering problems that appear when new technologies reach production."
 
 [[params.socialIcons]]
 name = "github"
@@ -71,8 +71,3 @@ weight = 20
 name = "About"
 url = "/about/"
 weight = 30
-
-[[menu.main]]
-name = "Tags"
-url = "/tags/"
-weight = 40

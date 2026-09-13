@@ -1,9 +1,9 @@
 +++
-date = 2018-11-20T00:00:00  # Schedule page publish date.
+date = 2018-11-08T00:00:00  # Schedule page publish date.
 
 title = "Python tools"
-time_start = 2018-11-20T20:00:00
-time_end = 2018-11-20T20:10:00
+time_start = 2018-11-08T20:00:00
+time_end = 2018-11-08T20:10:00
 event = "VigoJUG"
 event_url = "https://www.meetup.com/es-ES/VigoJUG/events/255662689/"
 location = "Vigo, Spain"

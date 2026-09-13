@@ -5,7 +5,7 @@ title = "Artesanos del futuro"
 time_start = 2017-02-21T11:00:00
 time_end = 2017-02-21T11:15:00
 event = "High School Developers Parade Vigo 2017"
-event_url = "https://www.python-vigo.es/posts/reunion-del-grupo-el-20072017/"
+event_url = "https://www.meetup.com/es-ES/GDGVigo/events/237396475/"
 location = "Vigo, Spain"
 
 url_pdf = ""
