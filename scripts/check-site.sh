@@ -23,6 +23,7 @@ required_files=(
   about/index.html
   posts/index.html
   talks/index.html
+  talks/20260521-google-adk-workshop/index.html
   talks/20160317-python-special-methods/index.html
   talks/20170221-artesanos-del-futuro/index.html
   talks/20170720-python-mqtt-broker/index.html
