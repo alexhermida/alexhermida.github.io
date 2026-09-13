@@ -12,10 +12,10 @@ I like working on problems that don't fit neatly inside one layer of the stack. 
 
 My background spans Python, backend engineering, product development, data platforms, and cloud infrastructure. More recently, a significant part of my work has focused on building and operating AI agents and AI-enabled systems in production. Earlier in my career, I worked at [Taiga](https://taiga.io), founded [Initios](https://web.archive.org/web/20180829101008/http://www.initios.com/), and co-founded [Parkapp](https://www.parkapp.com/).
 
-I'm especially interested in what happens when new technology leaves the prototype stage and has to become dependable software. AI systems make that particularly interesting: familiar problems such as lifecycle management, concurrency, observability, evaluation, failure handling, and maintainability appear in new forms.
+I'm interested in the practical problems that appear when we turn new technologies into real software. With AI systems, the models are only one part of the problem. Architecture, lifecycle, observability, evaluation, failure handling, and maintainability are just as important if we want to build something people can depend on.
 
-I care about pragmatic engineering, clear communication, and reducing unnecessary complexity. The Agile Manifesto's emphasis on individuals and interactions still resonates with me. I enjoy debugging difficult problems, simplifying systems, and finding solutions that other engineers and scientists can build on.
+I believe clear communication is one of the most important parts of building software and achieving shared goals. The Agile Manifesto puts it well: “Individuals and interactions over processes and tools.” I try to keep that principle in mind while debugging difficult problems, simplifying systems, and building solutions that other engineers and scientists can work with.
 
-Community has also been an important part of my career. I've been involved with [Python Vigo](https://www.python-vigo.es/), [VigoTech](https://vigotech.org/), [A Industriosa](https://aindustriosa.org/), and [PyDay Galicia](https://pyday2017.python-vigo.es/), helped organize PyConES 2024, and currently collaborate with ANFAIA as a mentor.
+Community has also been an important part of my career. I've been involved with [Python Vigo](https://www.python-vigo.es/), [VigoTech](https://vigotech.org/), [A Industriosa](https://aindustriosa.org/), and [PyDay Galicia](https://pyday2017.python-vigo.es/), organized [PyConES 2024](https://2024.es.pycon.org/), and currently collaborate with [ANFAIA](https://anfaia.org/) as a mentor.
 
 This site is where I write about software engineering, AI systems, agents, Python, and the occasional problem that took longer to debug than expected.
